@@ -535,7 +535,7 @@
      ]
     },
     "Source": {
-     "BuildSpec": "buil-specs/buildspec.yml",
+     "BuildSpec": "build-specs/cdk-build-spec.yml",
      "Type": "CODEPIPELINE"
     }
    },

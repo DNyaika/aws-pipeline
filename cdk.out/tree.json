@@ -749,7 +749,7 @@
                     },
                     "source": {
                       "type": "CODEPIPELINE",
-                      "buildSpec": "buil-specs/buildspec.yml"
+                      "buildSpec": "build-specs/cdk-build-spec.yml"
                     }
                   }
                 },

@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm install -g npm
+      - npm install -g npm@9
       - npm install
   build:
     commands:
