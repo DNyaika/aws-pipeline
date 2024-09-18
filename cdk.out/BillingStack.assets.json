@@ -1,0 +1,19 @@
+{
+  "version": "36.0.0",
+  "files": {
+    "1f03691540e45e3a1ba5c52b655180405f3fc44ef916d0ef75413d3ad7630d36": {
+      "source": {
+        "path": "BillingStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "1f03691540e45e3a1ba5c52b655180405f3fc44ef916d0ef75413d3ad7630d36.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
