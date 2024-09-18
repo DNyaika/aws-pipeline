@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const aws_cdk_lib_1 = require("aws-cdk-lib");
+const billing_stack_1 = require("../lib/billing-stack");
+const assert_1 = require("@aws-cdk/assert");
+test("Billing Stack", () => {
+    const app = new aws_cdk_lib_1.App();
+    const stack = new billing_stack_1.BillingStack(app, 'TestStack', {
+        budgetAmount: 1,
+        emailAddress: "test@example.com",
+    });
+    expect(assert_1.SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYmlsbGluZy1zdGFjay50ZXN0LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiYmlsbGluZy1zdGFjay50ZXN0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsNkNBQWtDO0FBQ2xDLHdEQUFvRDtBQUNwRCw0Q0FBNkM7QUFFN0MsSUFBSSxDQUFDLGVBQWUsRUFBRSxHQUFHLEVBQUU7SUFDdkIsTUFBTSxHQUFHLEdBQUcsSUFBSSxpQkFBRyxFQUFFLENBQUM7SUFDdEIsTUFBTSxLQUFLLEdBQUcsSUFBSSw0QkFBWSxDQUFDLEdBQUcsRUFBRSxXQUFXLEVBQUU7UUFDN0MsWUFBWSxFQUFFLENBQUM7UUFDZixZQUFZLEVBQUUsa0JBQWtCO0tBQ25DLENBQUMsQ0FBQztJQUNILE1BQU0sQ0FBQyxtQkFBVSxDQUFDLGdCQUFnQixDQUFDLEtBQUssQ0FBQyxDQUFDLENBQUMsZUFBZSxFQUFFLENBQUM7QUFDakUsQ0FBQyxDQUFDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBBcHAgfSBmcm9tICdhd3MtY2RrLWxpYic7XG5pbXBvcnQgeyBCaWxsaW5nU3RhY2sgfSBmcm9tICcuLi9saWIvYmlsbGluZy1zdGFjayc7XG5pbXBvcnQgeyBTeW50aFV0aWxzIH0gZnJvbSAnQGF3cy1jZGsvYXNzZXJ0JztcblxudGVzdChcIkJpbGxpbmcgU3RhY2tcIiwgKCkgPT4ge1xuICAgIGNvbnN0IGFwcCA9IG5ldyBBcHAoKTtcbiAgICBjb25zdCBzdGFjayA9IG5ldyBCaWxsaW5nU3RhY2soYXBwLCAnVGVzdFN0YWNrJywge1xuICAgICAgICBidWRnZXRBbW91bnQ6IDEsXG4gICAgICAgIGVtYWlsQWRkcmVzczogXCJ0ZXN0QGV4YW1wbGUuY29tXCIsXG4gICAgfSk7XG4gICAgZXhwZWN0KFN5bnRoVXRpbHMudG9DbG91ZEZvcm1hdGlvbihzdGFjaykpLnRvTWF0Y2hTbmFwc2hvdCgpO1xufSk7Il19
