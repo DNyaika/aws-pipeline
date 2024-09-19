@@ -14,6 +14,7 @@ phases:
       - echo "Running build"
       - npm run build
       - echo "Running CDK synth"
+      - npm run test
       - npm run cdk -- synth
 artifacts:
   base-directory: cdk.out
