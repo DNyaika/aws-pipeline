@@ -38,7 +38,7 @@ export class PipelineStack extends cdk.Stack {
         outputs: [cdkBuildOutput],
         project: new PipelineProject(this, 'CDKBuildProject', {
           environment: {
-            buildImage: LinuxBuildImage.STANDARD_7_0
+            buildImage: LinuxBuildImage.STANDARD_6_0
           },
 
           buildSpec: BuildSpec.fromSourceFilename('build-specs/cdk-build-spec.yml')
