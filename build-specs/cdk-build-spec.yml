@@ -3,9 +3,6 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Node.js"
-      - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-      - apt-get install -y nodejs
       - npm install -g npm@9  # Install the desired npm version
       - echo "Installing project dependencies"
       - npm install
