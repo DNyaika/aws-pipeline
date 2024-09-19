@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1461897b97ff4d2c62fc381350c3fc22db9b4e2268437f35b0507d315ced7f98.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/beb184ecb44d480eac4173ce780a722481c2f04482e38711ceed43d4a15609d9.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -80,6 +80,30 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineBuildCDKBuildCodePipelineActionRoleDefaultPolicyE350F3F9"
+          }
+        ],
+        "/PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelinePipelineUpdateCodePipelineActionRoleF10AA166"
+          }
+        ],
+        "/PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelinePipelineUpdateCodePipelineActionRoleDefaultPolicy024C1709"
+          }
+        ],
+        "/PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelinePipelineUpdateRoleAA43880D"
+          }
+        ],
+        "/PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelinePipelineUpdateRoleDefaultPolicyF5EA7F30"
           }
         ],
         "/PipelineStack/CDKBuildProject/Role/Resource": [
