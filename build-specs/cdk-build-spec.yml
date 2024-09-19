@@ -3,11 +3,17 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm install -g npm
+      - echo "Installing Node.js"
+      - curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+      - apt-get install -y nodejs
+      - npm install -g npm  # Install the desired npm version
+      - echo "Installing project dependencies"
       - npm install
   build:
     commands:
+      - echo "Running build"
       - npm run build
+      - echo "Running CDK synth"
       - npm run cdk -- synth
 artifacts:
   base-directory: cdk.out
