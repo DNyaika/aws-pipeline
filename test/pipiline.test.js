@@ -1,17 +1,11 @@
 "use strict";
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as Pipiline from '../lib/pipiline-stack';
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/pipiline-stack.ts
-test('SQS Queue Created', () => {
-    //   const app = new cdk.App();
-    //     // WHEN
-    //   const stack = new Pipiline.PipilineStack(app, 'MyTestStack');
-    //     // THEN
-    //   const template = Template.fromStack(stack);
-    //   template.hasResourceProperties('AWS::SQS::Queue', {
-    //     VisibilityTimeout: 300
-    //   });
+Object.defineProperty(exports, "__esModule", { value: true });
+const cdk = require("aws-cdk-lib");
+const pipeline_stack_1 = require("../lib/pipeline-stack");
+const assert_1 = require("@aws-cdk/assert");
+test('Pipeline Stack', () => {
+    const app = new cdk.App();
+    const stack = new pipeline_stack_1.PipelineStack(app, 'TestStack');
+    expect(assert_1.SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicGlwaWxpbmUudGVzdC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInBpcGlsaW5lLnRlc3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBLHNDQUFzQztBQUN0QyxxREFBcUQ7QUFDckQscURBQXFEO0FBRXJELHVFQUF1RTtBQUN2RSw0Q0FBNEM7QUFDNUMsSUFBSSxDQUFDLG1CQUFtQixFQUFFLEdBQUcsRUFBRTtJQUMvQiwrQkFBK0I7SUFDL0IsY0FBYztJQUNkLGtFQUFrRTtJQUNsRSxjQUFjO0lBQ2QsZ0RBQWdEO0lBRWhELHdEQUF3RDtJQUN4RCw2QkFBNkI7SUFDN0IsUUFBUTtBQUNSLENBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiLy8gaW1wb3J0ICogYXMgY2RrIGZyb20gJ2F3cy1jZGstbGliJztcbi8vIGltcG9ydCB7IFRlbXBsYXRlIH0gZnJvbSAnYXdzLWNkay1saWIvYXNzZXJ0aW9ucyc7XG4vLyBpbXBvcnQgKiBhcyBQaXBpbGluZSBmcm9tICcuLi9saWIvcGlwaWxpbmUtc3RhY2snO1xuXG4vLyBleGFtcGxlIHRlc3QuIFRvIHJ1biB0aGVzZSB0ZXN0cywgdW5jb21tZW50IHRoaXMgZmlsZSBhbG9uZyB3aXRoIHRoZVxuLy8gZXhhbXBsZSByZXNvdXJjZSBpbiBsaWIvcGlwaWxpbmUtc3RhY2sudHNcbnRlc3QoJ1NRUyBRdWV1ZSBDcmVhdGVkJywgKCkgPT4ge1xuLy8gICBjb25zdCBhcHAgPSBuZXcgY2RrLkFwcCgpO1xuLy8gICAgIC8vIFdIRU5cbi8vICAgY29uc3Qgc3RhY2sgPSBuZXcgUGlwaWxpbmUuUGlwaWxpbmVTdGFjayhhcHAsICdNeVRlc3RTdGFjaycpO1xuLy8gICAgIC8vIFRIRU5cbi8vICAgY29uc3QgdGVtcGxhdGUgPSBUZW1wbGF0ZS5mcm9tU3RhY2soc3RhY2spO1xuXG4vLyAgIHRlbXBsYXRlLmhhc1Jlc291cmNlUHJvcGVydGllcygnQVdTOjpTUVM6OlF1ZXVlJywge1xuLy8gICAgIFZpc2liaWxpdHlUaW1lb3V0OiAzMDBcbi8vICAgfSk7XG59KTtcbiJdfQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicGlwaWxpbmUudGVzdC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInBpcGlsaW5lLnRlc3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxtQ0FBbUM7QUFDbkMsMERBQXNEO0FBQ3RELDRDQUE2QztBQUU3QyxJQUFJLENBQUMsZ0JBQWdCLEVBQUUsR0FBRyxFQUFFO0lBQ3hCLE1BQU0sR0FBRyxHQUFHLElBQUksR0FBRyxDQUFDLEdBQUcsRUFBRSxDQUFDO0lBQzFCLE1BQU0sS0FBSyxHQUFHLElBQUksOEJBQWEsQ0FBQyxHQUFHLEVBQUUsV0FBVyxDQUFDLENBQUM7SUFDbEQsTUFBTSxDQUFDLG1CQUFVLENBQUMsZ0JBQWdCLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxlQUFlLEVBQUUsQ0FBQztBQUNqRSxDQUFDLENBQUksQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCAqIGFzIGNkayBmcm9tICdhd3MtY2RrLWxpYic7XG5pbXBvcnQgeyBQaXBlbGluZVN0YWNrIH0gZnJvbSAnLi4vbGliL3BpcGVsaW5lLXN0YWNrJztcbmltcG9ydCB7IFN5bnRoVXRpbHMgfSBmcm9tICdAYXdzLWNkay9hc3NlcnQnO1xuXG50ZXN0KCdQaXBlbGluZSBTdGFjaycsICgpID0+IHtcbiAgICBjb25zdCBhcHAgPSBuZXcgY2RrLkFwcCgpO1xuICAgIGNvbnN0IHN0YWNrID0gbmV3IFBpcGVsaW5lU3RhY2soYXBwLCAnVGVzdFN0YWNrJyk7XG4gICAgZXhwZWN0KFN5bnRoVXRpbHMudG9DbG91ZEZvcm1hdGlvbihzdGFjaykpLnRvTWF0Y2hTbmFwc2hvdCgpO1xufSAgICk7XG4iXX0=
