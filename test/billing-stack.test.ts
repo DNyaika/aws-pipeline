@@ -8,5 +8,6 @@ test("Billing Stack", () => {
         budgetAmount: 1,
         emailAddress: "test@example.com",
     });
+    
     expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
 });
