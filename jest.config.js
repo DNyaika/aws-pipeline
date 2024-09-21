@@ -3,8 +3,7 @@ module.exports = {
   roots: ['<rootDir>/test'],
   testMatch: ['**/*.test.ts'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    updateSnapshot: process.env.CI ? true : false,
+    '^.+\\.tsx?$': 'ts-jest'
   },
 
   reporters: [
