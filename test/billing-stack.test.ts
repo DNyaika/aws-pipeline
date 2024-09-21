@@ -1,6 +1,6 @@
 import { App } from 'aws-cdk-lib';
 import { BillingStack } from '../lib/billing-stack';
-import { SynthUtils } from '@aws-cdk/assert';
+import { Template } from 'aws-cdk-lib/assertions';
 
 test("Billing Stack", () => {
     const app = new App();
@@ -9,5 +9,6 @@ test("Billing Stack", () => {
         emailAddress: "test@example.com",
     });
     
-    expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
+    const template = Template.fromStack(stack);
+    expect(template.toJSON()).toMatchSnapshot();
 });
