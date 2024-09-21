@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/beb184ecb44d480eac4173ce780a722481c2f04482e38711ceed43d4a15609d9.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1f3a9ac3dcb276723fb71262c8cfe60908ddc3dcf798106a8c1a892193fabe5d.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -68,6 +68,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineSourcepipelinesourceWebhookResource7AC46B37"
+          }
+        ],
+        "/PipelineStack/Pipeline/Source/service-source/WebhookResource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineSourceservicesourceWebhookResource5B3AAB53"
           }
         ],
         "/PipelineStack/Pipeline/Build/CDK_Build/CodePipelineActionRole/Resource": [

@@ -206,7 +206,29 @@
         "Name": "pipeline-source",
         "OutputArtifacts": [
          {
-          "Name": "SourceOutput"
+          "Name": "CDKSourceOutput"
+         }
+        ],
+        "RunOrder": 1
+       },
+       {
+        "ActionTypeId": {
+         "Category": "Source",
+         "Owner": "ThirdParty",
+         "Provider": "GitHub",
+         "Version": "1"
+        },
+        "Configuration": {
+         "Owner": "DNyaika",
+         "Repo": "express-lambda",
+         "Branch": "main",
+         "OAuthToken": "{{resolve:secretsmanager:github-pipeline-token:SecretString:::}}",
+         "PollForSourceChanges": false
+        },
+        "Name": "service-source",
+        "OutputArtifacts": [
+         {
+          "Name": "ServicekSourceOutput"
          }
         ],
         "RunOrder": 1
@@ -230,7 +252,7 @@
         },
         "InputArtifacts": [
          {
-          "Name": "SourceOutput"
+          "Name": "CDKSourceOutput"
          }
         ],
         "Name": "CDK_Build",
@@ -320,6 +342,30 @@
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/Pipeline/Source/pipeline-source/WebhookResource"
+   }
+  },
+  "PipelineSourceservicesourceWebhookResource5B3AAB53": {
+   "Type": "AWS::CodePipeline::Webhook",
+   "Properties": {
+    "Authentication": "GITHUB_HMAC",
+    "AuthenticationConfiguration": {
+     "SecretToken": "{{resolve:secretsmanager:github-pipeline-token:SecretString:::}}"
+    },
+    "Filters": [
+     {
+      "JsonPath": "$.ref",
+      "MatchEquals": "refs/heads/{Branch}"
+     }
+    ],
+    "RegisterWithThirdParty": true,
+    "TargetAction": "service-source",
+    "TargetPipeline": {
+     "Ref": "PipelineC660917D"
+    },
+    "TargetPipelineVersion": 1
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Source/service-source/WebhookResource"
    }
   },
   "PipelineBuildCDKBuildCodePipelineActionRole15F4B424": {

@@ -275,7 +275,7 @@
                             "name": "pipeline-source",
                             "outputArtifacts": [
                               {
-                                "name": "SourceOutput"
+                                "name": "CDKSourceOutput"
                               }
                             ],
                             "actionTypeId": {
@@ -292,6 +292,28 @@
                               "PollForSourceChanges": false
                             },
                             "runOrder": 1
+                          },
+                          {
+                            "name": "service-source",
+                            "outputArtifacts": [
+                              {
+                                "name": "ServicekSourceOutput"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Source",
+                              "version": "1",
+                              "owner": "ThirdParty",
+                              "provider": "GitHub"
+                            },
+                            "configuration": {
+                              "Owner": "DNyaika",
+                              "Repo": "express-lambda",
+                              "Branch": "main",
+                              "OAuthToken": "{{resolve:secretsmanager:github-pipeline-token:SecretString:::}}",
+                              "PollForSourceChanges": false
+                            },
+                            "runOrder": 1
                           }
                         ]
                       },
@@ -302,7 +324,7 @@
                             "name": "CDK_Build",
                             "inputArtifacts": [
                               {
-                                "name": "SourceOutput"
+                                "name": "CDKSourceOutput"
                               }
                             ],
                             "outputArtifacts": [
@@ -403,6 +425,45 @@
                             ],
                             "registerWithThirdParty": true,
                             "targetAction": "pipeline-source",
+                            "targetPipeline": {
+                              "Ref": "PipelineC660917D"
+                            },
+                            "targetPipelineVersion": 1
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_codepipeline.CfnWebhook",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  },
+                  "service-source": {
+                    "id": "service-source",
+                    "path": "PipelineStack/Pipeline/Source/service-source",
+                    "children": {
+                      "WebhookResource": {
+                        "id": "WebhookResource",
+                        "path": "PipelineStack/Pipeline/Source/service-source/WebhookResource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::CodePipeline::Webhook",
+                          "aws:cdk:cloudformation:props": {
+                            "authentication": "GITHUB_HMAC",
+                            "authenticationConfiguration": {
+                              "secretToken": "{{resolve:secretsmanager:github-pipeline-token:SecretString:::}}"
+                            },
+                            "filters": [
+                              {
+                                "jsonPath": "$.ref",
+                                "matchEquals": "refs/heads/{Branch}"
+                              }
+                            ],
+                            "registerWithThirdParty": true,
+                            "targetAction": "service-source",
                             "targetPipeline": {
                               "Ref": "PipelineC660917D"
                             },
