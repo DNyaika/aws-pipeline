@@ -2,7 +2,7 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Code, Function, Runtime, InlineCode } from 'aws-cdk-lib/aws-lambda';
 import { HttpApi } from 'aws-cdk-lib/aws-apigatewayv2';
-import { LambdaProxyIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 
 export class ServiceStack extends Stack{
     public readonly serviceCode: Code;
@@ -18,9 +18,7 @@ export class ServiceStack extends Stack{
         });
 
         new HttpApi(this, 'ServiceApi', {
-            defaultIntegration: new LambdaProxyIntegration({
-                handler: lambda
-            }),
+            defaultIntegration: new HttpLambdaIntegration('ServiceLambdaIntegration', lambda),
             apiName: 'ServiceApi'
         });
 
