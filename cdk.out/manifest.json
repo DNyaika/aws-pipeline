@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1f3a9ac3dcb276723fb71262c8cfe60908ddc3dcf798106a8c1a892193fabe5d.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/73e580006e7090fc71cf2cb439214aed586b933bf0da447dc3a45f9c3e47f452.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -88,6 +88,18 @@
             "data": "PipelineBuildCDKBuildCodePipelineActionRoleDefaultPolicyE350F3F9"
           }
         ],
+        "/PipelineStack/Pipeline/Build/Service_Build/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3"
+          }
+        ],
+        "/PipelineStack/Pipeline/Build/Service_Build/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineBuildServiceBuildCodePipelineActionRoleDefaultPolicyE6A14559"
+          }
+        ],
         "/PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/CodePipelineActionRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -112,6 +124,30 @@
             "data": "PipelinePipelineUpdateRoleDefaultPolicyF5EA7F30"
           }
         ],
+        "/PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378"
+          }
+        ],
+        "/PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineProdServiceUpdateCodePipelineActionRoleDefaultPolicy8EDDB903"
+          }
+        ],
+        "/PipelineStack/Pipeline/Prod/Service_Update/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineProdServiceUpdateRoleF95D76E4"
+          }
+        ],
+        "/PipelineStack/Pipeline/Prod/Service_Update/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineProdServiceUpdateRoleDefaultPolicyB5D4E495"
+          }
+        ],
         "/PipelineStack/CDKBuildProject/Role/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -128,6 +164,24 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "CDKBuildProject96462ED9"
+          }
+        ],
+        "/PipelineStack/ServiceBuildProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceBuildProjectRoleEB246009"
+          }
+        ],
+        "/PipelineStack/ServiceBuildProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceBuildProjectRoleDefaultPolicy29400A8A"
+          }
+        ],
+        "/PipelineStack/ServiceBuildProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceBuildProject6D228AFA"
           }
         ],
         "/PipelineStack/CDKMetadata/Default": [
@@ -222,6 +276,120 @@
         ]
       },
       "displayName": "BillingStack"
+    },
+    "ServiceStackProd.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ServiceStackProd.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ServiceStackProd": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ServiceStackProd.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/224b10b489019cd10beebedd0de724ff18bf6fec3a452679bf0b0191c57bc5a0.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ServiceStackProd.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ServiceStackProd.assets"
+      ],
+      "metadata": {
+        "/ServiceStackProd/ServiceLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaServiceRoleF5A50FBC"
+          }
+        ],
+        "/ServiceStackProd/ServiceLambda/LambdaSourceBucketNameParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3"
+          }
+        ],
+        "/ServiceStackProd/ServiceLambda/LambdaSourceObjectKeyParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
+          }
+        ],
+        "/ServiceStackProd/ServiceLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaA7DE4D2C"
+          }
+        ],
+        "/ServiceStackProd/ServiceApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApi4633ACD6"
+          }
+        ],
+        "/ServiceStackProd/ServiceApi/DefaultRoute/ServiceLambdaIntegration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegration9CFAFDC9"
+          }
+        ],
+        "/ServiceStackProd/ServiceApi/DefaultRoute/ServiceLambdaIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegrationPermission05D4CD54"
+          }
+        ],
+        "/ServiceStackProd/ServiceApi/DefaultRoute/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRoute1D980EEE"
+          }
+        ],
+        "/ServiceStackProd/ServiceApi/DefaultStage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultStage0A39469D"
+          }
+        ],
+        "/ServiceStackProd/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ServiceStackProd/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/ServiceStackProd/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ServiceStackProd/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ServiceStackProd"
     },
     "Tree": {
       "type": "cdk:tree",

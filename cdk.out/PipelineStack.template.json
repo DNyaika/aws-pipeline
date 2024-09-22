@@ -149,7 +149,19 @@
         },
         {
          "Fn::GetAtt": [
+          "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
           "PipelinePipelineUpdateCodePipelineActionRoleF10AA166",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
           "Arn"
          ]
         }
@@ -180,6 +192,7 @@
     },
     "Name": "Pipeline",
     "PipelineType": "V2",
+    "RestartExecutionOnUpdate": true,
     "RoleArn": {
      "Fn::GetAtt": [
       "PipelineRoleD68726F7",
@@ -268,6 +281,37 @@
          ]
         },
         "RunOrder": 1
+       },
+       {
+        "ActionTypeId": {
+         "Category": "Build",
+         "Owner": "AWS",
+         "Provider": "CodeBuild",
+         "Version": "1"
+        },
+        "Configuration": {
+         "ProjectName": {
+          "Ref": "ServiceBuildProject6D228AFA"
+         }
+        },
+        "InputArtifacts": [
+         {
+          "Name": "ServicekSourceOutput"
+         }
+        ],
+        "Name": "Service_Build",
+        "OutputArtifacts": [
+         {
+          "Name": "ServiceBuildOutput"
+         }
+        ],
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
        }
       ],
       "Name": "Build"
@@ -309,6 +353,48 @@
        }
       ],
       "Name": "Pipeline_Update"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "ServiceStackProd",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "PipelineProdServiceUpdateRoleF95D76E4",
+           "Arn"
+          ]
+         },
+         "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+         "ActionMode": "CREATE_UPDATE",
+         "TemplatePath": "CDKBuildOutput::${serviceStack.stackName}.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "ServiceBuildOutput"
+         },
+         {
+          "Name": "CDKBuildOutput"
+         }
+        ],
+        "Name": "Service_Update",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Prod"
      }
     ]
    },
@@ -434,6 +520,74 @@
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/Pipeline/Build/CDK_Build/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Build/Service_Build/CodePipelineActionRole/Resource"
+   }
+  },
+  "PipelineBuildServiceBuildCodePipelineActionRoleDefaultPolicyE6A14559": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "codebuild:BatchGetBuilds",
+        "codebuild:StartBuild",
+        "codebuild:StopBuild"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "ServiceBuildProject6D228AFA",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineBuildServiceBuildCodePipelineActionRoleDefaultPolicyE6A14559",
+    "Roles": [
+     {
+      "Ref": "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Build/Service_Build/CodePipelineActionRole/DefaultPolicy/Resource"
    }
   },
   "PipelinePipelineUpdateCodePipelineActionRoleF10AA166": {
@@ -636,6 +790,206 @@
     "aws:cdk:path": "PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/Role/DefaultPolicy/Resource"
    }
   },
+  "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/Resource"
+   }
+  },
+  "PipelineProdServiceUpdateCodePipelineActionRoleDefaultPolicy8EDDB903": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineProdServiceUpdateRoleF95D76E4",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStack*",
+        "cloudformation:GetStackPolicy",
+        "cloudformation:GetTemplate*",
+        "cloudformation:SetStackPolicy",
+        "cloudformation:UpdateStack",
+        "cloudformation:ValidateTemplate"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":stack/ServiceStackProd/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineProdServiceUpdateCodePipelineActionRoleDefaultPolicy8EDDB903",
+    "Roles": [
+     {
+      "Ref": "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineProdServiceUpdateRoleF95D76E4": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudformation.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Prod/Service_Update/Role/Resource"
+   }
+  },
+  "PipelineProdServiceUpdateRoleDefaultPolicyB5D4E495": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineProdServiceUpdateRoleDefaultPolicyB5D4E495",
+    "Roles": [
+     {
+      "Ref": "PipelineProdServiceUpdateRoleF95D76E4"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Prod/Service_Update/Role/DefaultPolicy/Resource"
+   }
+  },
   "CDKBuildProjectRoleC798FB78": {
    "Type": "AWS::IAM::Role",
    "Properties": {
@@ -833,6 +1187,205 @@
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKBuildProject/Resource"
+   }
+  },
+  "ServiceBuildProjectRoleEB246009": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/ServiceBuildProject/Role/Resource"
+   }
+  },
+  "ServiceBuildProjectRoleDefaultPolicy29400A8A": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/aws/codebuild/",
+           {
+            "Ref": "ServiceBuildProject6D228AFA"
+           },
+           ":*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:",
+           {
+            "Ref": "AWS::Region"
+           },
+           ":",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":log-group:/aws/codebuild/",
+           {
+            "Ref": "ServiceBuildProject6D228AFA"
+           }
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:BatchPutCodeCoverages",
+        "codebuild:BatchPutTestCases",
+        "codebuild:CreateReport",
+        "codebuild:CreateReportGroup",
+        "codebuild:UpdateReport"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":report-group/",
+          {
+           "Ref": "ServiceBuildProject6D228AFA"
+          },
+          "-*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "ServiceBuildProjectRoleDefaultPolicy29400A8A",
+    "Roles": [
+     {
+      "Ref": "ServiceBuildProjectRoleEB246009"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/ServiceBuildProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "ServiceBuildProject6D228AFA": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "CODEPIPELINE"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "Image": "aws/codebuild/standard:6.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "ServiceBuildProjectRoleEB246009",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "build-specs/service-build-spec.yml",
+     "Type": "CODEPIPELINE"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/ServiceBuildProject/Resource"
    }
   },
   "CDKMetadata": {
