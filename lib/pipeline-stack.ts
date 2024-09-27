@@ -6,7 +6,6 @@ import { CloudFormationCreateUpdateStackAction, CodeBuildAction, GitHubSourceAct
 import { PipelineProject, LinuxBuildImage, BuildSpec } from 'aws-cdk-lib/aws-codebuild';
 import { ServiceStack } from './service-stack';
 import { BillingStack } from './billing-stack';
-// import { Logger } from 'aws-cdk-lib/aws-logs';
 
 export class PipelineStack extends cdk.Stack {
   private readonly pipeline: Pipeline;
@@ -89,32 +88,30 @@ export class PipelineStack extends cdk.Stack {
       ]
     });
   }
-  public addServiceStage(serviceStack: ServiceStack, stageName: string): IStage | undefined {
-    try {
-      const stage = this.pipeline.addStage({
-        stageName: stageName,
-        actions: [
-          new CloudFormationCreateUpdateStackAction({
-            actionName: 'Service_Update',
-            stackName: serviceStack.stackName,
-            templatePath: this.cdkBuildOutput.atPath(`${serviceStack.stackName}.template.json`),
-            adminPermissions: true,
-            parameterOverrides: {
-              serviceCode: this.serviceBuildOutput.s3Location,
-            },
-            extraInputs: [this.serviceBuildOutput]
-          })
-        ]
-      });
-      return stage;
-    } catch (error) {
-      console.error(`Error adding service stage: ${error}`);
-      return undefined;
-    }
+
+  public addServiceStage(serviceStack: ServiceStack, stageName: string): IStage {
+    const stage = this.pipeline.addStage({
+      stageName: stageName,
+      actions: [
+        new CloudFormationCreateUpdateStackAction({
+          actionName: 'Service_Update',
+          stackName: serviceStack.stackName,
+          templatePath: this.cdkBuildOutput.atPath(`${serviceStack.stackName}.template.json`),
+          adminPermissions: true,
+          parameterOverrides: {
+            serviceCode: this.serviceBuildOutput.s3Location,
+          },
+          extraInputs: [this.serviceBuildOutput]
+        })
+      ]
+    });
+
+    console.log(`Added service stage: ${JSON.stringify(stage)}`);
+    console.log(`Stage properties: ${Object.getOwnPropertyNames(stage)}`);
+    return stage;
   }
 
   public addBillingStage(billingStack: BillingStack, stage: IStage) {
-    console.log(`addBillingStage called with stage: ${stage.stageName}`);
     stage.addAction(
       new CloudFormationCreateUpdateStackAction({
         actionName: 'Billing_Update',

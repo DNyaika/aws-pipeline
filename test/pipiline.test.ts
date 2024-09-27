@@ -18,8 +18,8 @@ test('Adding service stage', () => {
     const pipelineStack = new PipelineStack(app, 'PipelineStack');
     const serviceStack = new ServiceStack(app, 'ServiceStack');
     // WHEN
-    console.log('Calling addServiceStage...');
     const stage = pipelineStack.addServiceStage(serviceStack, 'Test');
+    console.log(`Service stage: ${JSON.stringify(stage)}`);
     // THEN
     expectCDK(pipelineStack).to(haveResourceLike('AWS::CodePipeline::Pipeline', {
         Stages: arrayWith(
@@ -29,7 +29,8 @@ test('Adding service stage', () => {
         ),
     }));
 });
-/** 
+/**
+
 test('Adding billing stack to stage', () => {
     // GIVEN
     const app = new cdk.App();
@@ -39,15 +40,9 @@ test('Adding billing stack to stage', () => {
         budgetAmount: 5,
         emailAddress: 'test@example.com'
     });
-    console.log('Calling addServiceStage...');
     const stage = pipelineStack.addServiceStage(serviceStack, 'Test');
 
-    if (!stage) {
-        console.log('Failed to add service stage');
-        return;
-    }
-
-    console.log(`Adding billing stack ${billingStack.stackName} to stage ${stage.stageName}`);
+    console.log(`Adding billing stack ${billingStack.stackName} to stage ${stage?.stageName}`);
 
     console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(pipelineStack)));
 
@@ -68,4 +63,4 @@ test('Adding billing stack to stage', () => {
         )
     }));
 });
-*/
+ */
