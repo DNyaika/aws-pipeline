@@ -105,8 +105,6 @@ export class PipelineStack extends cdk.Stack {
         })
       ]
     });
-
-    console.log(`Added service stage: ${JSON.stringify(stage)}`);
     console.log(`Stage properties: ${Object.getOwnPropertyNames(stage)}`);
     return stage;
   }
