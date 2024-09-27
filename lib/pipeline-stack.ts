@@ -89,24 +89,29 @@ export class PipelineStack extends cdk.Stack {
     });
   }
 
-  public addServiceStage(serviceStack: ServiceStack, stageName: string): IStage {
-    const stage = this.pipeline.addStage({
+  public addServiceStage(
+    serviceStack: ServiceStack,
+    stageName: string
+  ): IStage {
+    return this.pipeline.addStage({
       stageName: stageName,
       actions: [
         new CloudFormationCreateUpdateStackAction({
-          actionName: 'Service_Update',
+          actionName: "Service_Update",
           stackName: serviceStack.stackName,
-          templatePath: this.cdkBuildOutput.atPath(`${serviceStack.stackName}.template.json`),
+          templatePath: this.cdkBuildOutput.atPath(
+            `${serviceStack.stackName}.template.json`
+          ),
           adminPermissions: true,
           parameterOverrides: {
-            serviceCode: this.serviceBuildOutput.s3Location,
+            ...serviceStack.serviceCode.assign(
+              this.serviceBuildOutput.s3Location
+            ),
           },
-          extraInputs: [this.serviceBuildOutput]
-        })
-      ]
+          extraInputs: [this.serviceBuildOutput],
+        }),
+      ],
     });
-    console.log(`Stage properties: ${Object.getOwnPropertyNames(stage)}`);
-    return stage;
   }
 
   public addBillingStage(billingStack: BillingStack, stage: IStage) {
