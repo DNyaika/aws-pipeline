@@ -372,9 +372,9 @@
            "Arn"
           ]
          },
-         "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+         "ParameterOverrides": "{\"serviceCode\":{\"bucketName\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"objectKey\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}}",
          "ActionMode": "CREATE_UPDATE",
-         "TemplatePath": "CDKBuildOutput::${serviceStack.stackName}.template.json"
+         "TemplatePath": "CDKBuildOutput::ServiceStackProd.template.json"
         },
         "InputArtifacts": [
          {
