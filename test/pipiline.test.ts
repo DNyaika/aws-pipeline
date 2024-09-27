@@ -20,7 +20,6 @@ test('Adding service stage', () => {
     // WHEN
     console.log('Calling addServiceStage...');
     const stage = pipelineStack.addServiceStage(serviceStack, 'Test');
-    console.log(`Service stage: ${JSON.stringify(stage)}`);
     // THEN
     expectCDK(pipelineStack).to(haveResourceLike('AWS::CodePipeline::Pipeline', {
         Stages: arrayWith(
