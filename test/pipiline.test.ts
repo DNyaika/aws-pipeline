@@ -16,7 +16,9 @@ test('Adding service stage', () => {
     // GIVEN
     const app = new cdk.App();
     const pipelineStack = new PipelineStack(app, 'PipelineStack');
-    const serviceStack = new ServiceStack(app, 'ServiceStack');
+    const serviceStack = new ServiceStack(app, 'ServiceStack',{
+        stageName: 'Test',
+    });
     // WHEN
     const stage = pipelineStack.addServiceStage(serviceStack, 'Test');
     // THEN

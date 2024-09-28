@@ -164,6 +164,12 @@
           "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
           "Arn"
          ]
+        },
+        {
+         "Fn::GetAtt": [
+          "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE",
+          "Arn"
+         ]
         }
        ]
       }
@@ -364,6 +370,48 @@
          "Version": "1"
         },
         "Configuration": {
+         "StackName": "ServiceStackTest",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": {
+          "Fn::GetAtt": [
+           "PipelineTestServiceUpdateRoleCFBFE8A8",
+           "Arn"
+          ]
+         },
+         "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+         "ActionMode": "CREATE_UPDATE",
+         "TemplatePath": "CDKBuildOutput::ServiceStackTest.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "ServiceBuildOutput"
+         },
+         {
+          "Name": "CDKBuildOutput"
+         }
+        ],
+        "Name": "Service_Update",
+        "RoleArn": {
+         "Fn::GetAtt": [
+          "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE",
+          "Arn"
+         ]
+        },
+        "RunOrder": 1
+       }
+      ],
+      "Name": "Test"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
          "StackName": "ServiceStackProd",
          "Capabilities": "CAPABILITY_NAMED_IAM",
          "RoleArn": {
@@ -372,7 +420,7 @@
            "Arn"
           ]
          },
-         "ParameterOverrides": "{\"serviceCode\":{\"bucketName\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"objectKey\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}}",
+         "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
          "ActionMode": "CREATE_UPDATE",
          "TemplatePath": "CDKBuildOutput::ServiceStackProd.template.json"
         },
@@ -788,6 +836,206 @@
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/Pipeline/Pipeline_Update/Pipeline_Update/Role/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::",
+           {
+            "Ref": "AWS::AccountId"
+           },
+           ":root"
+          ]
+         ]
+        }
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Test/Service_Update/CodePipelineActionRole/Resource"
+   }
+  },
+  "PipelineTestServiceUpdateCodePipelineActionRoleDefaultPolicyB716735E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineTestServiceUpdateRoleCFBFE8A8",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cloudformation:CreateStack",
+        "cloudformation:DescribeStack*",
+        "cloudformation:GetStackPolicy",
+        "cloudformation:GetTemplate*",
+        "cloudformation:SetStackPolicy",
+        "cloudformation:UpdateStack",
+        "cloudformation:ValidateTemplate"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":stack/ServiceStackTest/*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineTestServiceUpdateCodePipelineActionRoleDefaultPolicyB716735E",
+    "Roles": [
+     {
+      "Ref": "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Test/Service_Update/CodePipelineActionRole/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineTestServiceUpdateRoleCFBFE8A8": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "cloudformation.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Test/Service_Update/Role/Resource"
+   }
+  },
+  "PipelineTestServiceUpdateRoleDefaultPolicy6AD3CE51": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": "*",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PipelineTestServiceUpdateRoleDefaultPolicy6AD3CE51",
+    "Roles": [
+     {
+      "Ref": "PipelineTestServiceUpdateRoleCFBFE8A8"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Test/Service_Update/Role/DefaultPolicy/Resource"
    }
   },
   "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378": {

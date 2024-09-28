@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b1e53238401f9c9e437ebfb2bf271379905352b1155730006e4680b4c2c2fdc3.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/34fa325bf38617c0fdf37a9115bcbf580e07336f48e3196c5fa20869dd8ebdca.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -122,6 +122,30 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelinePipelineUpdateRoleDefaultPolicyF5EA7F30"
+          }
+        ],
+        "/PipelineStack/Pipeline/Test/Service_Update/CodePipelineActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE"
+          }
+        ],
+        "/PipelineStack/Pipeline/Test/Service_Update/CodePipelineActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineTestServiceUpdateCodePipelineActionRoleDefaultPolicyB716735E"
+          }
+        ],
+        "/PipelineStack/Pipeline/Test/Service_Update/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineTestServiceUpdateRoleCFBFE8A8"
+          }
+        ],
+        "/PipelineStack/Pipeline/Test/Service_Update/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineTestServiceUpdateRoleDefaultPolicy6AD3CE51"
           }
         ],
         "/PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/Resource": [
@@ -277,6 +301,120 @@
       },
       "displayName": "BillingStack"
     },
+    "ServiceStackTest.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ServiceStackTest.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ServiceStackTest": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "ServiceStackTest.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b1b9e95f61de662bea5a925e9853956fc7716341d3f3bc2e2de3f91e196a1be0.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ServiceStackTest.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ServiceStackTest.assets"
+      ],
+      "metadata": {
+        "/ServiceStackTest/ServiceLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaServiceRoleF5A50FBC"
+          }
+        ],
+        "/ServiceStackTest/ServiceLambda/LambdaSourceBucketNameParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3"
+          }
+        ],
+        "/ServiceStackTest/ServiceLambda/LambdaSourceObjectKeyParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
+          }
+        ],
+        "/ServiceStackTest/ServiceLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaA7DE4D2C"
+          }
+        ],
+        "/ServiceStackTest/ServiceApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApi4633ACD6"
+          }
+        ],
+        "/ServiceStackTest/ServiceApi/DefaultRoute/ServiceLambdaIntegration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegration9CFAFDC9"
+          }
+        ],
+        "/ServiceStackTest/ServiceApi/DefaultRoute/ServiceLambdaIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegrationPermission05D4CD54"
+          }
+        ],
+        "/ServiceStackTest/ServiceApi/DefaultRoute/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRoute1D980EEE"
+          }
+        ],
+        "/ServiceStackTest/ServiceApi/DefaultStage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultStage0A39469D"
+          }
+        ],
+        "/ServiceStackTest/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ServiceStackTest/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/ServiceStackTest/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ServiceStackTest/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ServiceStackTest"
+    },
     "ServiceStackProd.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
@@ -294,7 +432,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/224b10b489019cd10beebedd0de724ff18bf6fec3a452679bf0b0191c57bc5a0.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/bc5fb869db3b8ff534cd92bbb0c181ef44516f9eaf876797b7deea3e46a072ff.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
