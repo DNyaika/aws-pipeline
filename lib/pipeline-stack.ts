@@ -6,15 +6,27 @@ import { CloudFormationCreateUpdateStackAction, CodeBuildAction, CodeBuildAction
 import { PipelineProject, LinuxBuildImage, BuildSpec, BuildEnvironmentVariableType } from 'aws-cdk-lib/aws-codebuild';
 import { ServiceStack } from './service-stack';
 import { BillingStack } from './billing-stack';
+import { SnsTopic } from 'aws-cdk-lib/aws-events-targets';
+import { Topic } from 'aws-cdk-lib/aws-sns';
+import { RuleTargetInput, EventField } from 'aws-cdk-lib/aws-events';
+import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 
 export class PipelineStack extends cdk.Stack {
   private readonly pipeline: Pipeline;
   private readonly cdkBuildOutput: Artifact;
   private readonly serviceBuildOutput: Artifact;
   private readonly serviceSourceOutput: Artifact;
+  private readonly pipelineNotificationTopic: Topic;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+    this.pipelineNotificationTopic = new Topic(this, 'PipelineNotificationTopic', {
+      topicName: 'PipelineNotifications',
+    });
+
+    this.pipelineNotificationTopic.addSubscription(
+      new EmailSubscription('davidnyaika2@gmail.com')
+    )
 
     this.pipeline = new Pipeline(this, 'Pipeline', {
       pipelineName: 'Pipeline',
@@ -127,7 +139,7 @@ export class PipelineStack extends cdk.Stack {
   }
 
   public addServiceIntegrationTestToStage(stage: IStage, serviceEndPoint: string) {
-    stage.addAction(new CodeBuildAction({
+    const integTestAction = new CodeBuildAction({
       actionName: 'Integration_Test',
       input: this.serviceSourceOutput,
       project: new PipelineProject(this, 'ServiceIntegrationTestsProject', {
@@ -144,6 +156,20 @@ export class PipelineStack extends cdk.Stack {
       },
       type: CodeBuildActionType.TEST,
       runOrder: 2,
-    }));
+    })
+    stage.addAction(integTestAction);
+    integTestAction.onStateChange("integrationTestFailed", new SnsTopic(this.pipelineNotificationTopic, {
+      message: RuleTargetInput.fromText(
+        `Integration Test Failed for ${EventField.fromPath('$.detail.execution-result.external-execution-url')}`
+      ),
+    }), {
+      ruleName: 'IntegrationTestFailed',
+      eventPattern: {
+        detail: {
+          state: ['FAILED'],
+        },
+      },
+      description: 'Integration Test Failed'
+    });
   }
 }

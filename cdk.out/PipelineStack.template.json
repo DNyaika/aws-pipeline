@@ -1,5 +1,56 @@
 {
  "Resources": {
+  "PipelineNotificationTopicD4036329": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "TopicName": "PipelineNotifications"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/PipelineNotificationTopic/Resource"
+   }
+  },
+  "PipelineNotificationTopicdavidnyaika2gmailcomBD9577A4": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": "davidnyaika2@gmail.com",
+    "Protocol": "email",
+    "TopicArn": {
+     "Ref": "PipelineNotificationTopicD4036329"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/PipelineNotificationTopic/davidnyaika2@gmail.com/Resource"
+   }
+  },
+  "PipelineNotificationTopicPolicyDA8EB620": {
+   "Type": "AWS::SNS::TopicPolicy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sns:Publish",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "events.amazonaws.com"
+       },
+       "Resource": {
+        "Ref": "PipelineNotificationTopicD4036329"
+       },
+       "Sid": "0"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Topics": [
+     {
+      "Ref": "PipelineNotificationTopicD4036329"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/PipelineNotificationTopic/Policy/Resource"
+   }
+  },
   "PipelineArtifactsBucket22248F97": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
@@ -1150,6 +1201,75 @@
     "aws:cdk:path": "PipelineStack/Pipeline/Test/Integration_Test/CodePipelineActionRole/DefaultPolicy/Resource"
    }
   },
+  "PipelineTestIntegrationTestintegrationTestFailed53A0C703": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "Description": "Integration Test Failed",
+    "EventPattern": {
+     "detail": {
+      "state": [
+       "FAILED"
+      ],
+      "stage": [
+       "Test"
+      ],
+      "action": [
+       "Integration_Test"
+      ]
+     },
+     "detail-type": [
+      "CodePipeline Action Execution State Change"
+     ],
+     "source": [
+      "aws.codepipeline"
+     ],
+     "resources": [
+      {
+       "Fn::Join": [
+        "",
+        [
+         "arn:",
+         {
+          "Ref": "AWS::Partition"
+         },
+         ":codepipeline:",
+         {
+          "Ref": "AWS::Region"
+         },
+         ":",
+         {
+          "Ref": "AWS::AccountId"
+         },
+         ":",
+         {
+          "Ref": "PipelineC660917D"
+         }
+        ]
+       ]
+      }
+     ]
+    },
+    "Name": "IntegrationTestFailed",
+    "State": "ENABLED",
+    "Targets": [
+     {
+      "Arn": {
+       "Ref": "PipelineNotificationTopicD4036329"
+      },
+      "Id": "Target0",
+      "InputTransformer": {
+       "InputPathsMap": {
+        "detail-execution-result-external-execution-url": "$.detail.execution-result.external-execution-url"
+       },
+       "InputTemplate": "\"Integration Test Failed for <detail-execution-result-external-execution-url>\""
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/Test/Integration_Test/integrationTestFailed/Resource"
+   }
+  },
   "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378": {
    "Type": "AWS::IAM::Role",
    "Properties": {
@@ -1943,7 +2063,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02OzQ6CMBCEn4V7WQGjDyAvQPDg0UC7xoXSJZRKTNN3N/wYOM23k8nsZJBeUkiiarKxVG2sqQZ/HyvZimqyTy9ZYU89ajIIvthI5C9z5AfWb+Y2CHsGf3OyxXG2N1qlYE3yu9vrHQRVHfiS9VK06J78Z+YVtSOt9gnFwA3K5c2GIYgSLbtBrlUHztkoGolNEIYVQmNPnyyB9ApJ1FiieHBmpA6hXPUHOlqHWxYBAAA="
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WQ3W6DMAyFn6X3wYNW2wOsL4BopV1OkHiaIY0RTlpVUd59grDBrs53rOMf+QjVawXloX1Ioc1QWOogXnyrB9U+5DOKE4hXHkmr85fLcAmd6IlGT+zm6j+/RGq2pJ9/HdkmpdngSCNacgixXmmO7fkDu2/mISk5QXwPekA/l1fKsi3Y+6SovUFs2C6DFt2Svxm8o/MCsQlrLFjMt3WBrNkOqyfuUS/LV0xJNSgcJp07d3xmZ2j+QFKODUIvL/djCdUblIdeiIopOE83hCbrD0Qaiyh5AQAA"
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKMetadata/Default"

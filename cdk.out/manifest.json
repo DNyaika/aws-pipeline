@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/62f07587eebc836dea678c838820139faed1e4be9932d6cf021c3fecf3b18260.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/a297c707c6efeb715f5c7f7b8201f8f47e67d0270c06deeac5c17b99ef00755e.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -34,6 +34,24 @@
         "PipelineStack.assets"
       ],
       "metadata": {
+        "/PipelineStack/PipelineNotificationTopic/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineNotificationTopicD4036329"
+          }
+        ],
+        "/PipelineStack/PipelineNotificationTopic/davidnyaika2@gmail.com/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineNotificationTopicdavidnyaika2gmailcomBD9577A4"
+          }
+        ],
+        "/PipelineStack/PipelineNotificationTopic/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineNotificationTopicPolicyDA8EB620"
+          }
+        ],
         "/PipelineStack/Pipeline/ArtifactsBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
@@ -158,6 +176,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineTestIntegrationTestCodePipelineActionRoleDefaultPolicy5D7E9151"
+          }
+        ],
+        "/PipelineStack/Pipeline/Test/Integration_Test/integrationTestFailed/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineTestIntegrationTestintegrationTestFailed53A0C703"
           }
         ],
         "/PipelineStack/Pipeline/Prod/Service_Update/CodePipelineActionRole/Resource": [
