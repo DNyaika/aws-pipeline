@@ -5,6 +5,7 @@ import { HttpApi } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Alias } from 'aws-cdk-lib/aws-lambda';
 import { Version } from 'aws-cdk-lib/aws-lambda';
+import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-codedeploy';
 
 interface ServiceStackProps extends StackProps{
     stageName: string;
@@ -35,6 +36,15 @@ export class ServiceStack extends Stack{
             defaultIntegration: new HttpLambdaIntegration('ServiceLambdaIntegration', alias),
             apiName: `ServiceApi${props?.stageName}`,
         });
+
+        if(props?.stageName === 'Prod'){
+        new LambdaDeploymentGroup(this, 'DeploymentGroup', {
+            alias:alias,
+            deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+        });
+        }
+
+
 
         this.serviceEndpointOutput =new CfnOutput(this, 'ApiEndpointOutput', {
             exportName: `ServiceEndpoint${props?.stageName}`,
