@@ -372,7 +372,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/d6d41b7fbcb7bb19122871cfd7e646b794e0659238e1054e089885f9a6369e0f.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/fa355d5776b5b2346b7692ce25489ef2f4b14eb6ff2b1bbe183d669f1abb5520.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -410,6 +410,18 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ServiceLambdaA7DE4D2C"
+          }
+        ],
+        "/ServiceStackTest/ServiceLambda/CurrentVersion/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaCurrentVersionA30C27B2d86eb8824454119527c823ff7647713d"
+          }
+        ],
+        "/ServiceStackTest/ServiceLambdaAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaAlias89D0CD0D"
           }
         ],
         "/ServiceStackTest/ServiceApi/Resource": [
@@ -492,7 +504,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0b101f691797505819033831f2ded40c221adfffb17c40b9c7269474991de36a.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1206e5594ea95013207e989a4c18df568f96054edfe51dbca7ee544f985aef29.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -530,6 +542,18 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ServiceLambdaA7DE4D2C"
+          }
+        ],
+        "/ServiceStackProd/ServiceLambda/CurrentVersion/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaCurrentVersionA30C27B2d59f96cff0bb3df99efd1b96028d0695"
+          }
+        ],
+        "/ServiceStackProd/ServiceLambdaAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaAlias89D0CD0D"
           }
         ],
         "/ServiceStackProd/ServiceApi/Resource": [

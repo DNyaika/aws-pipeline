@@ -3112,6 +3112,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
+                    "description": "Generated on ${new Date().toISOString()}",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3127,10 +3128,77 @@
                   "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
                   "version": "2.151.0"
                 }
+              },
+              "CurrentVersion": {
+                "id": "CurrentVersion",
+                "path": "ServiceStackTest/ServiceLambda/CurrentVersion",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackTest/ServiceLambda/CurrentVersion/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Version",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "ServiceLambdaA7DE4D2C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnVersion",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Version",
+                  "version": "2.151.0"
+                }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceLambdaAlias": {
+            "id": "ServiceLambdaAlias",
+            "path": "ServiceStackTest/ServiceLambdaAlias",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackTest/ServiceLambdaAlias/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Alias",
+                  "aws:cdk:cloudformation:props": {
+                    "functionName": {
+                      "Ref": "ServiceLambdaA7DE4D2C"
+                    },
+                    "functionVersion": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaCurrentVersionA30C27B2d86eb8824454119527c823ff7647713d",
+                        "Version"
+                      ]
+                    },
+                    "name": "ServiceLambdaAlias${props?.stageName}"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnAlias",
+                  "version": "2.151.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "ServiceStackTest/ServiceLambdaAlias/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Alias",
               "version": "2.151.0"
             }
           },
@@ -3172,10 +3240,7 @@
                             },
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
-                              "Fn::GetAtt": [
-                                "ServiceLambdaA7DE4D2C",
-                                "Arn"
-                              ]
+                              "Ref": "ServiceLambdaAlias89D0CD0D"
                             },
                             "payloadFormatVersion": "2.0"
                           }
@@ -3199,10 +3264,7 @@
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
-                          "Fn::GetAtt": [
-                            "ServiceLambdaA7DE4D2C",
-                            "Arn"
-                          ]
+                          "Ref": "ServiceLambdaAlias89D0CD0D"
                         },
                         "principal": "apigateway.amazonaws.com",
                         "sourceArn": {
@@ -3456,6 +3518,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
+                    "description": "Generated on ${new Date().toISOString()}",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3471,10 +3534,77 @@
                   "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
                   "version": "2.151.0"
                 }
+              },
+              "CurrentVersion": {
+                "id": "CurrentVersion",
+                "path": "ServiceStackProd/ServiceLambda/CurrentVersion",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProd/ServiceLambda/CurrentVersion/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Version",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "ServiceLambdaA7DE4D2C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnVersion",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Version",
+                  "version": "2.151.0"
+                }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceLambdaAlias": {
+            "id": "ServiceLambdaAlias",
+            "path": "ServiceStackProd/ServiceLambdaAlias",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProd/ServiceLambdaAlias/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Alias",
+                  "aws:cdk:cloudformation:props": {
+                    "functionName": {
+                      "Ref": "ServiceLambdaA7DE4D2C"
+                    },
+                    "functionVersion": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaCurrentVersionA30C27B2d59f96cff0bb3df99efd1b96028d0695",
+                        "Version"
+                      ]
+                    },
+                    "name": "ServiceLambdaAlias${props?.stageName}"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnAlias",
+                  "version": "2.151.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "ServiceStackProd/ServiceLambdaAlias/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Alias",
               "version": "2.151.0"
             }
           },
@@ -3516,10 +3646,7 @@
                             },
                             "integrationType": "AWS_PROXY",
                             "integrationUri": {
-                              "Fn::GetAtt": [
-                                "ServiceLambdaA7DE4D2C",
-                                "Arn"
-                              ]
+                              "Ref": "ServiceLambdaAlias89D0CD0D"
                             },
                             "payloadFormatVersion": "2.0"
                           }
@@ -3543,10 +3670,7 @@
                       "aws:cdk:cloudformation:props": {
                         "action": "lambda:InvokeFunction",
                         "functionName": {
-                          "Fn::GetAtt": [
-                            "ServiceLambdaA7DE4D2C",
-                            "Arn"
-                          ]
+                          "Ref": "ServiceLambdaAlias89D0CD0D"
                         },
                         "principal": "apigateway.amazonaws.com",
                         "sourceArn": {

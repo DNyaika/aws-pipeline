@@ -3,6 +3,8 @@ import { Construct } from 'constructs';
 import { Code, Function, Runtime, InlineCode, CfnParametersCode } from 'aws-cdk-lib/aws-lambda';
 import { HttpApi } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
+import { Alias } from 'aws-cdk-lib/aws-lambda';
+import { Version } from 'aws-cdk-lib/aws-lambda';
 
 interface ServiceStackProps extends StackProps{
     stageName: string;
@@ -20,10 +22,17 @@ export class ServiceStack extends Stack{
             handler: 'src/lambda.handler',
             code: this.serviceCode,
             functionName: `ServiceLambda${props?.stageName}`,
+            description: 'Generated on ${new Date().toISOString()}',
+        });
+
+        const alias = new Alias(this, 'ServiceLambdaAlias', {
+            version: lambda.currentVersion,
+            aliasName: 'ServiceLambdaAlias${props?.stageName}',
+           
         });
 
         const httpApi=new HttpApi(this, 'ServiceApi', {
-            defaultIntegration: new HttpLambdaIntegration('ServiceLambdaIntegration', lambda),
+            defaultIntegration: new HttpLambdaIntegration('ServiceLambdaIntegration', alias),
             apiName: `ServiceApi${props?.stageName}`,
         });
 
