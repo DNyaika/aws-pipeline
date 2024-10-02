@@ -7,14 +7,14 @@ import { Alias } from 'aws-cdk-lib/aws-lambda';
 import { Version } from 'aws-cdk-lib/aws-lambda';
 import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-codedeploy';
 
-interface ServiceStackProps extends StackProps{
+interface ServiceStackProps extends StackProps {
     stageName: string;
 }
 
-export class ServiceStack extends Stack{
+export class ServiceStack extends Stack {
     public readonly serviceCode: CfnParametersCode;
     public readonly serviceEndpointOutput: CfnOutput;
-    constructor(scope: Construct, id: string, props?: ServiceStackProps){
+    constructor(scope: Construct, id: string, props?: ServiceStackProps) {
         super(scope, id, props);
         this.serviceCode = Code.fromCfnParameters();
 
@@ -26,29 +26,32 @@ export class ServiceStack extends Stack{
             description: 'Generated on ${new Date().toISOString()}',
         });
 
+        // Sanitize stageName to remove invalid characters and ensure length constraints
+        const sanitizedStageName = props?.stageName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
-            aliasName: 'ServiceLambdaAlias${props?.stageName}',
-           
+            aliasName: 'ServiceLambdaAlias${sanitizedStageName}',
+
         });
 
-        const httpApi=new HttpApi(this, 'ServiceApi', {
+        const httpApi = new HttpApi(this, 'ServiceApi', {
             defaultIntegration: new HttpLambdaIntegration('ServiceLambdaIntegration', alias),
             apiName: `ServiceApi${props?.stageName}`,
         });
 
-        if(props?.stageName === 'Prod'){
-        new LambdaDeploymentGroup(this, 'DeploymentGroup', {
-            alias:alias,
-            deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-        });
+        if (props?.stageName === 'Prod') {
+            new LambdaDeploymentGroup(this, 'DeploymentGroup', {
+                alias: alias,
+                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+            });
         }
 
 
 
-        this.serviceEndpointOutput =new CfnOutput(this, 'ApiEndpointOutput', {
+        this.serviceEndpointOutput = new CfnOutput(this, 'ApiEndpointOutput', {
             exportName: `ServiceEndpoint${props?.stageName}`,
-            value:httpApi.apiEndpoint,
+            value: httpApi.apiEndpoint,
             description: 'API Endpoint'
         })
     }
