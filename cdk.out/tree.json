@@ -3112,7 +3112,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on ${new Date().toISOString()}",
+                    "description": "Generated on 2024-10-03T04:30:18.922Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3176,11 +3176,11 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2d86eb8824454119527c823ff7647713d",
+                        "ServiceLambdaCurrentVersionA30C27B23fef76548e068a31da16c19ab77c1c02",
                         "Version"
                       ]
                     },
-                    "name": "ServiceLambdaAlias${props?.stageName}"
+                    "name": "ServiceLambdaAliasTest"
                   }
                 },
                 "constructInfo": {
@@ -3518,7 +3518,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on ${new Date().toISOString()}",
+                    "description": "Generated on 2024-10-03T04:30:18.940Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3582,11 +3582,11 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2d59f96cff0bb3df99efd1b96028d0695",
+                        "ServiceLambdaCurrentVersionA30C27B2ce29f24f7d053207559eb96719196741",
                         "Version"
                       ]
                     },
-                    "name": "ServiceLambdaAlias${props?.stageName}"
+                    "name": "ServiceLambdaAliasProd"
                   }
                 },
                 "constructInfo": {
@@ -3770,6 +3770,182 @@
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpApi",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceErrorAlarm": {
+            "id": "ServiceErrorAlarm",
+            "path": "ServiceStackProd/ServiceErrorAlarm",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProd/ServiceErrorAlarm/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmDescription": "Service is experiencing errors",
+                    "alarmName": "ServiceErrorAlarmProd",
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "ApiId",
+                        "value": {
+                          "Ref": "ServiceApi4633ACD6"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "metricName": "5xx",
+                    "namespace": "AWS/ApiGateway",
+                    "period": 60,
+                    "statistic": "Sum",
+                    "threshold": 1,
+                    "treatMissingData": "notBreaching"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
+              "version": "2.151.0"
+            }
+          },
+          "DeploymentGroup": {
+            "id": "DeploymentGroup",
+            "path": "ServiceStackProd/DeploymentGroup",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ServiceStackProd/DeploymentGroup/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "ServiceStackProd/DeploymentGroup/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProd/DeploymentGroup/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codedeploy.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSCodeDeployRoleForLambdaLimited"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.151.0"
+                }
+              },
+              "Application": {
+                "id": "Application",
+                "path": "ServiceStackProd/DeploymentGroup/Application",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProd/DeploymentGroup/Application/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::CodeDeploy::Application",
+                      "aws:cdk:cloudformation:props": {
+                        "computePlatform": "Lambda"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_codedeploy.CfnApplication",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codedeploy.LambdaApplication",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProd/DeploymentGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeDeploy::DeploymentGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmConfiguration": {
+                      "alarms": [
+                        {
+                          "name": {
+                            "Ref": "ServiceErrorAlarm0BA55CC3"
+                          }
+                        }
+                      ],
+                      "enabled": true
+                    },
+                    "applicationName": {
+                      "Ref": "DeploymentGroupApplication7B89ABEB"
+                    },
+                    "autoRollbackConfiguration": {
+                      "enabled": true,
+                      "events": [
+                        "DEPLOYMENT_FAILURE",
+                        "DEPLOYMENT_STOP_ON_ALARM"
+                      ]
+                    },
+                    "deploymentConfigName": "CodeDeployDefault.LambdaCanary10Percent5Minutes",
+                    "deploymentStyle": {
+                      "deploymentType": "BLUE_GREEN",
+                      "deploymentOption": "WITH_TRAFFIC_CONTROL"
+                    },
+                    "serviceRoleArn": {
+                      "Fn::GetAtt": [
+                        "DeploymentGroupServiceRoleA00955F3",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codedeploy.CfnDeploymentGroup",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codedeploy.LambdaDeploymentGroup",
               "version": "2.151.0"
             }
           },
