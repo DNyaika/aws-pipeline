@@ -23,15 +23,13 @@ export class ServiceStack extends Stack {
             handler: 'src/lambda.handler',
             code: this.serviceCode,
             functionName: `ServiceLambda${props?.stageName}`,
-            description: 'Generated on ${new Date().toISOString()}',
+            description: `Generated on ${new Date().toISOString()}`,
         });
 
-        // Sanitize stageName to remove invalid characters and ensure length constraints
-        const sanitizedStageName = props?.stageName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
 
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
-            aliasName: `ServiceLambdaAlias${sanitizedStageName}`,
+            aliasName: `ServiceLambdaAlias${props?.stageName}`,
 
         });
 
