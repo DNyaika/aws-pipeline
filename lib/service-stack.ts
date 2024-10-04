@@ -53,23 +53,29 @@ export class ServiceStack extends Stack {
             apiName: `ServiceApi${props?.stageName}`,
         });
 
-        if (props?.stageName === 'Prod') {
-            new LambdaDeploymentGroup(this, 'ServiceDeploymentGroup', {
-                alias:alias,
-                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-                autoRollback: {
-
-                }
-
-            })
-        }
-
-        // Output the API endpoint
-        new CfnOutput(this, 'ApiEndpoint', {
-            value: httpApi.apiEndpoint,
-            description: 'API Gateway endpoint URL',
-        });
-
+        if (props?.stageName === "Prod") {
+            new LambdaDeploymentGroup(this, "DeploymentGroup", {
+              alias: alias,
+              deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+              autoRollback: {
+                deploymentInAlarm: true,
+              },
+              alarms: [
+                httpApi
+                  .metricServerError()
+                  .with({
+                    period: Duration.minutes(1),
+                    statistic: Statistic.SUM,
+                  })
+                  .createAlarm(this, "ServiceErrorAlarm", {
+                    threshold: 1,
+                    alarmDescription: "Service is experiencing errors",
+                    alarmName: `ServiceErrorAlarm${props.stageName}`,
+                    evaluationPeriods: 1,
+                    treatMissingData: TreatMissingData.NOT_BREACHING,
+                  }),
+              ],
+            });
 
 
         this.serviceEndpointOutput = new CfnOutput(this, 'ApiEndpointOutput', {
