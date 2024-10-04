@@ -9,6 +9,7 @@ import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-c
 import { Statistic, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
 import { Duration } from 'aws-cdk-lib';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 interface ServiceStackProps extends StackProps {
     stageName: string;
@@ -29,6 +30,17 @@ export class ServiceStack extends Stack {
             description: `Generated on ${new Date().toISOString()}`,
         });
 
+          // Grant permissions for CloudWatch Logs
+          lambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                'logs:CreateLogGroup',
+                'logs:CreateLogStream',
+                'logs:PutLogEvents',
+            ],
+            resources: ['*'], // You can restrict this to specific log groups if needed
+        }));
+
 
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
@@ -46,11 +58,17 @@ export class ServiceStack extends Stack {
                 alias:alias,
                 deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
                 autoRollback: {
-                    
+
                 }
 
             })
         }
+
+        // Output the API endpoint
+        new CfnOutput(this, 'ApiEndpoint', {
+            value: httpApi.apiEndpoint,
+            description: 'API Gateway endpoint URL',
+        });
 
 
 
