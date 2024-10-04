@@ -53,7 +53,7 @@ export class ServiceStack extends Stack {
                     .metricServerError()
                     .with({
                         period: Duration.minutes(1),
-                      statistic: Statistic.SUM
+                      statistic: Statistic.SUM,
                     })
                     .createAlarm(this, 'ServiceErrorAlarm', {
                         threshold: 1,
