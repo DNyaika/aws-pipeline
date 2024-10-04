@@ -42,27 +42,27 @@ export class ServiceStack extends Stack {
         });
 
         if (props?.stageName === 'Prod') {
+            const errorAlarm = httpApi
+            .metricServerError()
+            .with({
+                period: Duration.minutes(1),
+                statistic: Statistic.SUM,
+            })
+            .createAlarm(this, 'ServiceErrorAlarm', {
+                threshold: 1,
+                alarmDescription: 'Service is experiencing errors',
+                evaluationPeriods: 1,
+                alarmName: `ServiceErrorAlarm${props?.stageName}`,
+                treatMissingData: TreatMissingData.NOT_BREACHING
+            });
+
             new LambdaDeploymentGroup(this, 'DeploymentGroup', {
-                alias: alias,
-                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-                autoRollback: { 
-                    deploymentInAlarm: true
-                },
-                alarms:[
-                    httpApi
-                    .metricServerError()
-                    .with({
-                        period: Duration.minutes(1),
-                      statistic: Statistic.SUM,
-                    })
-                    .createAlarm(this, 'ServiceErrorAlarm', {
-                        threshold: 1,
-                        alarmDescription: 'Service is experiencing errors',
-                        evaluationPeriods: 1,
-                        alarmName: `ServiceErrorAlarm${props?.stageName}`,
-                        treatMissingData: TreatMissingData.NOT_BREACHING
-                    })
-                ],
+            alias: alias,
+            deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+            autoRollback: { 
+                deploymentInAlarm: true
+            },
+            alarms: [errorAlarm],
             });
         }
 
