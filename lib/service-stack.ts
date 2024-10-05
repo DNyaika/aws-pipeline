@@ -8,6 +8,7 @@ import { Version } from 'aws-cdk-lib/aws-lambda';
 import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-codedeploy';
 import { Statistic, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
 import { Duration } from 'aws-cdk-lib';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
 
 interface ServiceStackProps extends StackProps {
@@ -29,6 +30,16 @@ export class ServiceStack extends Stack {
             description: `Generated on ${new Date().toISOString()}`,
         });
 
+                  // Grant permissions for CloudWatch Logs
+                  lambda.addToRolePolicy(new PolicyStatement({
+                    effect: Effect.ALLOW,
+                    actions: [
+                        'logs:CreateLogGroup',
+                        'logs:CreateLogStream',
+                        'logs:PutLogEvents',
+                    ],
+                    resources: ['*'], // You can restrict this to specific log groups if needed
+                }));
 
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
