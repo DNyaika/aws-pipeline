@@ -8,6 +8,7 @@ export declare class PipelineStack extends cdk.Stack {
     private readonly cdkBuildOutput;
     private readonly serviceBuildOutput;
     private readonly serviceSourceOutput;
+    private readonly pipelineNotificationTopic;
     constructor(scope: Construct, id: string, props?: cdk.StackProps);
     addServiceStage(serviceStack: ServiceStack, stageName: string): IStage;
     addBillingStage(billingStack: BillingStack, stage: IStage): void;

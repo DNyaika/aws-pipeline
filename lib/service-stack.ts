@@ -9,7 +9,6 @@ import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-c
 import { Statistic, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
 import { Duration } from 'aws-cdk-lib';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
-import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 interface ServiceStackProps extends StackProps {
     stageName: string;
@@ -30,24 +29,10 @@ export class ServiceStack extends Stack {
             description: `Generated on ${new Date().toISOString()}`,
         });
 
-          // Grant permissions for CloudWatch Logs
-          lambda.addToRolePolicy(new PolicyStatement({
-            effect: Effect.ALLOW,
-            actions: [
-                'logs:CreateLogGroup',
-                'logs:CreateLogStream',
-                'logs:PutLogEvents',
-            ],
-            resources: ['*'], // You can restrict this to specific log groups if needed
-        }));
-
-
-          // Sanitize stageName to remove invalid characters and ensure length constraints
-          const sanitizedStageName = props?.stageName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
 
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
-            aliasName: `ServiceLambdaAlias${sanitizedStageName}`,
+            aliasName: `ServiceLambdaAlias${props?.stageName}`,
 
         });
 
@@ -56,29 +41,31 @@ export class ServiceStack extends Stack {
             apiName: `ServiceApi${props?.stageName}`,
         });
 
-        if (props?.stageName === "Prod") {
-            new LambdaDeploymentGroup(this, "DeploymentGroup", {
-              alias: alias,
-              deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-              autoRollback: {
-                deploymentInAlarm: true,
-              },
-              alarms: [
-                httpApi
-                  .metricServerError()
-                  .with({
-                    period: Duration.minutes(1),
-                    statistic: Statistic.SUM,
-                  })
-                  .createAlarm(this, "ServiceErrorAlarm", {
-                    threshold: 1,
-                    alarmDescription: "Service is experiencing errors",
-                    alarmName: `ServiceErrorAlarm${props.stageName}`,
-                    evaluationPeriods: 1,
-                    treatMissingData: TreatMissingData.NOT_BREACHING,
-                  }),
-              ],
+        if (props?.stageName === 'Prod') {
+            new LambdaDeploymentGroup(this, 'DeploymentGroup', {
+                alias: alias,
+                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+                autoRollback: { 
+                    deploymentInAlarm: true
+                },
+                alarms:[
+                    httpApi
+                    .metricServerError()
+                    .with({
+                        period: Duration.minutes(1),
+                      statistic: Statistic.SUM,
+                    })
+                    .createAlarm(this, 'ServiceErrorAlarm', {
+                        threshold: 1,
+                        alarmDescription: 'Service is experiencing errors',
+                        evaluationPeriods: 1,
+                        alarmName: `ServiceErrorAlarm${props?.stageName}`,
+                        treatMissingData: TreatMissingData.NOT_BREACHING
+                    })
+                ],
             });
+        }
+
 
 
         this.serviceEndpointOutput = new CfnOutput(this, 'ApiEndpointOutput', {
@@ -87,5 +74,4 @@ export class ServiceStack extends Stack {
             description: 'API Endpoint'
         })
     }
-}
 }
