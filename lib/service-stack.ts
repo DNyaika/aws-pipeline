@@ -78,7 +78,6 @@ export class ServiceStack extends Stack {
         }
 
 
-
         this.serviceEndpointOutput = new CfnOutput(this, 'ApiEndpointOutput', {
             exportName: `ServiceEndpoint${props?.stageName}`,
             value: httpApi.apiEndpoint,
