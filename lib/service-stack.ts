@@ -62,7 +62,7 @@ export class ServiceStack extends Stack {
                 .createAlarm(this, 'ServiceApiErrorAlarm', {
                     threshold: 1,
                     evaluationPeriods: 1,
-                    alarmDescription: 'API Gateway is experiencing server errors',
+                    alarmDescription: 'API Gateway is experiencing server errors in the production environment',
                     alarmName: `ServiceApiErrorAlarm${props?.stageName}`,
                     treatMissingData: TreatMissingData.NOT_BREACHING,
                     comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
@@ -74,7 +74,7 @@ export class ServiceStack extends Stack {
                     lambda.metricErrors().createAlarm(this, 'ServiceErrorAlarm', {
                         threshold: 1,
                         evaluationPeriods: 1,
-                        alarmDescription: 'Lambda function is experiencing errors',
+                        alarmDescription: 'Lambda function is experiencing errors in the production environment',
                         alarmName: `ServiceErrorAlarm${props?.stageName}`,
                         treatMissingData: TreatMissingData.NOT_BREACHING,
                         comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
