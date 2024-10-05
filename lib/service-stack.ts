@@ -53,6 +53,21 @@ export class ServiceStack extends Stack {
         });
 
         if (props?.stageName === 'Prod') {
+            const apiErrorAlarm = httpApi
+                .metricServerError()
+                .with({
+                    period: Duration.minutes(1),
+                    statistic: Statistic.SUM,
+                })
+                .createAlarm(this, 'ServiceApiErrorAlarm', {
+                    threshold: 1,
+                    evaluationPeriods: 1,
+                    alarmDescription: 'API Gateway is experiencing server errors',
+                    alarmName: `ServiceApiErrorAlarm${props?.stageName}`,
+                    treatMissingData: TreatMissingData.NOT_BREACHING,
+                    comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
+                });
+
             new LambdaDeploymentGroup(this, 'DeploymentGroup', {
                 alias: alias,
                 alarms: [
@@ -64,20 +79,7 @@ export class ServiceStack extends Stack {
                         treatMissingData: TreatMissingData.NOT_BREACHING,
                         comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
                     }),
-                    httpApi
-                    .metricServerError()
-                    .with({
-                        period: Duration.minutes(1),
-                        statistic: Statistic.SUM,
-                    })
-                    .createAlarm(this, 'ServiceApiErrorAlarm', {
-                        threshold: 1,
-                        evaluationPeriods: 1,
-                        alarmDescription: 'API Gateway is experiencing server errors',
-                        alarmName: `ServiceApiErrorAlarm${props?.stageName}`,
-                        treatMissingData: TreatMissingData.NOT_BREACHING,
-                        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
-                    })
+                    apiErrorAlarm
                 ],
                 deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
                 autoRollback: { 
