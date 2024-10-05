@@ -55,11 +55,15 @@ export class ServiceStack extends Stack {
         if (props?.stageName === 'Prod') {
             new LambdaDeploymentGroup(this, 'DeploymentGroup', {
                 alias: alias,
-                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-                autoRollback: { 
-                    deploymentInAlarm: true
-                },
-                alarms:[
+                alarms: [
+                    lambda.metricErrors().createAlarm(this, 'ServiceErrorAlarm', {
+                        threshold: 1,
+                        evaluationPeriods: 1,
+                        alarmDescription: 'Service is experiencing errors',
+                        alarmName: `ServiceErrorAlarm${props?.stageName}`,
+                        treatMissingData: TreatMissingData.NOT_BREACHING,
+                        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
+                    }),
                     httpApi
                     .metricServerError()
                     .with({
@@ -75,6 +79,10 @@ export class ServiceStack extends Stack {
                         comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
                     })
                 ],
+                deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
+                autoRollback: { 
+                    deploymentInAlarm: true
+                },
             });
         }
 
