@@ -42,9 +42,12 @@ export class ServiceStack extends Stack {
         }));
 
 
+          // Sanitize stageName to remove invalid characters and ensure length constraints
+          const sanitizedStageName = props?.stageName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
-            aliasName: `ServiceLambdaAlias${props?.stageName}`,
+            aliasName: `ServiceLambdaAlias${sanitizedStageName}`,
 
         });
 
