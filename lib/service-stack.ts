@@ -6,7 +6,7 @@ import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations
 import { Alias } from 'aws-cdk-lib/aws-lambda';
 import { Version } from 'aws-cdk-lib/aws-lambda';
 import { LambdaDeploymentGroup, LambdaDeploymentConfig } from 'aws-cdk-lib/aws-codedeploy';
-import { Statistic, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
+import { ComparisonOperator, Statistic, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
 import { Duration } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
@@ -71,7 +71,8 @@ export class ServiceStack extends Stack {
                         alarmDescription: 'Service is experiencing errors',
                         evaluationPeriods: 1,
                         alarmName: `ServiceErrorAlarm${props?.stageName}`,
-                        treatMissingData: TreatMissingData.NOT_BREACHING
+                        treatMissingData: TreatMissingData.NOT_BREACHING,
+                        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
                     })
                 ],
             });
