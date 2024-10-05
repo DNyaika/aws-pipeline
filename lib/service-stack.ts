@@ -70,7 +70,7 @@ export class ServiceStack extends Stack {
                         period: Duration.minutes(1),
                       statistic: Statistic.SUM,
                     })
-                    .createAlarm(this, 'ServiceErrorAlarm', {
+                    .createAlarm(this, 'ServiceErrorAlarm1', {
                         threshold: 1,
                         alarmDescription: 'Service is experiencing errors',
                         evaluationPeriods: 1,
