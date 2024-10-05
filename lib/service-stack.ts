@@ -74,7 +74,7 @@ export class ServiceStack extends Stack {
                         threshold: 1,
                         alarmDescription: 'Service is experiencing errors',
                         evaluationPeriods: 1,
-                        alarmName: `ServiceErrorAlarm${props?.stageName}`,
+                        alarmName: `ServiceErrorAlarm1${props?.stageName}`,
                         treatMissingData: TreatMissingData.NOT_BREACHING,
                         comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
                     })
