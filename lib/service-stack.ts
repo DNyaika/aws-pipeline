@@ -30,16 +30,16 @@ export class ServiceStack extends Stack {
             description: `Generated on ${new Date().toISOString()}`,
         });
 
-                  // Grant permissions for CloudWatch Logs
-                  lambda.addToRolePolicy(new PolicyStatement({
-                    effect: Effect.ALLOW,
-                    actions: [
-                        'logs:CreateLogGroup',
-                        'logs:CreateLogStream',
-                        'logs:PutLogEvents',
-                    ],
-                    resources: ['*'], // You can restrict this to specific log groups if needed
-                }));
+        // Grant permissions for CloudWatch Logs
+        lambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            actions: [
+                'logs:CreateLogGroup',
+                'logs:CreateLogStream',
+                'logs:PutLogEvents',
+            ],
+            resources: ['*'], // You can restrict this to specific log groups if needed
+        }));
 
         const alias = new Alias(this, 'ServiceLambdaAlias', {
             version: lambda.currentVersion,
@@ -53,39 +53,30 @@ export class ServiceStack extends Stack {
         });
 
         if (props?.stageName === 'Prod') {
-            const apiErrorAlarm = httpApi
-                .metricServerError()
-                .with({
-                    period: Duration.minutes(1),
-                    statistic: Statistic.SUM,
-                })
-                .createAlarm(this, 'ServiceApiErrorAlarm', {
-                    threshold: 1,
-                    evaluationPeriods: 1,
-                    alarmDescription: 'API Gateway is experiencing server errors in the production environment',
-                    alarmName: `ServiceApiErrorAlarm${props?.stageName}`,
-                    treatMissingData: TreatMissingData.NOT_BREACHING,
-                    comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
-                });
-
-            new LambdaDeploymentGroup(this, 'DeploymentGroup', {
+            new LambdaDeploymentGroup(this, 'ServiceDeploymentGroup', {
                 alias: alias,
-                alarms: [
-                    lambda.metricErrors().createAlarm(this, 'ServiceErrorAlarm', {
-                        threshold: 1,
-                        evaluationPeriods: 1,
-                        alarmDescription: 'Lambda function is experiencing errors in the production environment',
-                        alarmName: `ServiceErrorAlarm${props?.stageName}`,
-                        treatMissingData: TreatMissingData.NOT_BREACHING,
-                        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD
-                    }),
-                    apiErrorAlarm
-                ],
                 deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
-                autoRollback: { 
-                    deploymentInAlarm: true
+                autoRollback: {
+                    deploymentInAlarm: true,
                 },
+                alarms: [
+                    httpApi.metricServerError()
+                        .with({
+                            period: Duration.minutes(1),
+                            statistic: Statistic.SUM,
+                        })
+                        .createAlarm(this, 'ServiceErrorAlarm', {
+                            threshold: 1,
+                            alarmDescription: 'Service is experiencing errors',
+                            alarmName: `ServiceErrorAlarm${props?.stageName}`,
+                            evaluationPeriods: 1,
+                            treatMissingData: TreatMissingData.NOT_BREACHING,
+                            comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+                        }),
+                ],
+
             });
+
         }
 
 

@@ -3075,6 +3075,49 @@
                       "fqn": "aws-cdk-lib.aws_iam.CfnRole",
                       "version": "2.151.0"
                     }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ServiceStackTest/ServiceLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackTest/ServiceLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ServiceLambdaServiceRoleDefaultPolicy99B6DE7C",
+                            "roles": [
+                              {
+                                "Ref": "ServiceLambdaServiceRoleF5A50FBC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.151.0"
+                    }
                   }
                 },
                 "constructInfo": {
@@ -3112,7 +3155,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-03T04:30:18.922Z",
+                    "description": "Generated on 2024-10-06T05:35:13.446Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3176,7 +3219,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B23fef76548e068a31da16c19ab77c1c02",
+                        "ServiceLambdaCurrentVersionA30C27B2f7fe276761b07d5ce9b6ad2e440d3917",
                         "Version"
                       ]
                     },
@@ -3481,6 +3524,49 @@
                       "fqn": "aws-cdk-lib.aws_iam.CfnRole",
                       "version": "2.151.0"
                     }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ServiceStackProd/ServiceLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackProd/ServiceLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ServiceLambdaServiceRoleDefaultPolicy99B6DE7C",
+                            "roles": [
+                              {
+                                "Ref": "ServiceLambdaServiceRoleF5A50FBC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.151.0"
+                    }
                   }
                 },
                 "constructInfo": {
@@ -3518,7 +3604,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-03T04:30:18.940Z",
+                    "description": "Generated on 2024-10-06T05:35:13.464Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3582,7 +3668,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2ce29f24f7d053207559eb96719196741",
+                        "ServiceLambdaCurrentVersionA30C27B20908f63bb2107653fba4e49c26d3c132",
                         "Version"
                       ]
                     },
@@ -3814,17 +3900,17 @@
               "version": "2.151.0"
             }
           },
-          "DeploymentGroup": {
-            "id": "DeploymentGroup",
-            "path": "ServiceStackProd/DeploymentGroup",
+          "ServiceDeploymentGroup": {
+            "id": "ServiceDeploymentGroup",
+            "path": "ServiceStackProd/ServiceDeploymentGroup",
             "children": {
               "ServiceRole": {
                 "id": "ServiceRole",
-                "path": "ServiceStackProd/DeploymentGroup/ServiceRole",
+                "path": "ServiceStackProd/ServiceDeploymentGroup/ServiceRole",
                 "children": {
                   "ImportServiceRole": {
                     "id": "ImportServiceRole",
-                    "path": "ServiceStackProd/DeploymentGroup/ServiceRole/ImportServiceRole",
+                    "path": "ServiceStackProd/ServiceDeploymentGroup/ServiceRole/ImportServiceRole",
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.Resource",
                       "version": "2.151.0"
@@ -3832,7 +3918,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "ServiceStackProd/DeploymentGroup/ServiceRole/Resource",
+                    "path": "ServiceStackProd/ServiceDeploymentGroup/ServiceRole/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                       "aws:cdk:cloudformation:props": {
@@ -3877,11 +3963,11 @@
               },
               "Application": {
                 "id": "Application",
-                "path": "ServiceStackProd/DeploymentGroup/Application",
+                "path": "ServiceStackProd/ServiceDeploymentGroup/Application",
                 "children": {
                   "Resource": {
                     "id": "Resource",
-                    "path": "ServiceStackProd/DeploymentGroup/Application/Resource",
+                    "path": "ServiceStackProd/ServiceDeploymentGroup/Application/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::CodeDeploy::Application",
                       "aws:cdk:cloudformation:props": {
@@ -3901,7 +3987,7 @@
               },
               "Resource": {
                 "id": "Resource",
-                "path": "ServiceStackProd/DeploymentGroup/Resource",
+                "path": "ServiceStackProd/ServiceDeploymentGroup/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::CodeDeploy::DeploymentGroup",
                   "aws:cdk:cloudformation:props": {
@@ -3916,7 +4002,7 @@
                       "enabled": true
                     },
                     "applicationName": {
-                      "Ref": "DeploymentGroupApplication7B89ABEB"
+                      "Ref": "ServiceDeploymentGroupApplication9F46E868"
                     },
                     "autoRollbackConfiguration": {
                       "enabled": true,
@@ -3932,7 +4018,7 @@
                     },
                     "serviceRoleArn": {
                       "Fn::GetAtt": [
-                        "DeploymentGroupServiceRoleA00955F3",
+                        "ServiceDeploymentGroupServiceRole9638530E",
                         "Arn"
                       ]
                     }
