@@ -53,6 +53,7 @@ export class ServiceStack extends Stack {
         });
 
         if (props?.stageName === 'Prod') {
+            console.log('Entering the if statement: stageName is Prod'); 
             new LambdaDeploymentGroup(this, 'ServiceDeploymentGroup', {
                 alias: alias,
                 deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
