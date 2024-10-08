@@ -3155,7 +3155,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-08T04:08:17.821Z",
+                    "description": "Generated on 2024-10-08T15:08:01.238Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3219,7 +3219,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2c3c2e26952fd59777a0902c9fa537ea1",
+                        "ServiceLambdaCurrentVersionA30C27B28e3fe2c8902f538d5e055ec1261ebfa9",
                         "Version"
                       ]
                     },
@@ -3604,7 +3604,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-08T04:08:17.834Z",
+                    "description": "Generated on 2024-10-08T15:08:01.254Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3668,7 +3668,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2424bb0333849d9bae031be429c5197b0",
+                        "ServiceLambdaCurrentVersionA30C27B28bacdc6abe9806d16bf3edd2aceef08e",
                         "Version"
                       ]
                     },
@@ -4039,17 +4039,17 @@
             "id": "ServiceHealthCanary",
             "path": "ServiceStackProd/ServiceHealthCanary",
             "children": {
-              "service-canary": {
-                "id": "service-canary",
-                "path": "ServiceStackProd/ServiceHealthCanary/service-canary",
+              "new2-service-canary": {
+                "id": "new2-service-canary",
+                "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary",
                 "children": {
                   "ArtifactsBucket": {
                     "id": "ArtifactsBucket",
-                    "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket",
+                    "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket",
                     "children": {
                       "Resource": {
                         "id": "Resource",
-                        "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket/Resource",
+                        "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                           "aws:cdk:cloudformation:props": {
@@ -4071,16 +4071,16 @@
                       },
                       "Policy": {
                         "id": "Policy",
-                        "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket/Policy",
+                        "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket/Policy",
                         "children": {
                           "Resource": {
                             "id": "Resource",
-                            "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket/Policy/Resource",
+                            "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket/Policy/Resource",
                             "attributes": {
                               "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
                               "aws:cdk:cloudformation:props": {
                                 "bucket": {
-                                  "Ref": "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE"
+                                  "Ref": "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A"
                                 },
                                 "policyDocument": {
                                   "Statement": [
@@ -4098,7 +4098,7 @@
                                       "Resource": [
                                         {
                                           "Fn::GetAtt": [
-                                            "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                            "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A",
                                             "Arn"
                                           ]
                                         },
@@ -4108,7 +4108,7 @@
                                             [
                                               {
                                                 "Fn::GetAtt": [
-                                                  "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                                  "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A",
                                                   "Arn"
                                                 ]
                                               },
@@ -4142,11 +4142,11 @@
                   },
                   "ServiceRole": {
                     "id": "ServiceRole",
-                    "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ServiceRole",
+                    "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ServiceRole",
                     "children": {
                       "ImportServiceRole": {
                         "id": "ImportServiceRole",
-                        "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ServiceRole/ImportServiceRole",
+                        "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ServiceRole/ImportServiceRole",
                         "constructInfo": {
                           "fqn": "aws-cdk-lib.Resource",
                           "version": "2.151.0"
@@ -4154,7 +4154,7 @@
                       },
                       "Resource": {
                         "id": "Resource",
-                        "path": "ServiceStackProd/ServiceHealthCanary/service-canary/ServiceRole/Resource",
+                        "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/ServiceRole/Resource",
                         "attributes": {
                           "aws:cdk:cloudformation:type": "AWS::IAM::Role",
                           "aws:cdk:cloudformation:props": {
@@ -4185,7 +4185,7 @@
                                       "Effect": "Allow",
                                       "Resource": {
                                         "Fn::GetAtt": [
-                                          "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                          "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A",
                                           "Arn"
                                         ]
                                       }
@@ -4199,7 +4199,7 @@
                                           [
                                             {
                                               "Fn::GetAtt": [
-                                                "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                                "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A",
                                                 "Arn"
                                               ]
                                             },
@@ -4266,7 +4266,7 @@
                   },
                   "Resource": {
                     "id": "Resource",
-                    "path": "ServiceStackProd/ServiceHealthCanary/service-canary/Resource",
+                    "path": "ServiceStackProd/ServiceHealthCanary/new2-service-canary/Resource",
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::Synthetics::Canary",
                       "aws:cdk:cloudformation:props": {
@@ -4276,22 +4276,22 @@
                             [
                               "s3://",
                               {
-                                "Ref": "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE"
+                                "Ref": "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A"
                               }
                             ]
                           ]
                         },
                         "code": {
                           "handler": "index.handler",
-                          "script": "import { Wait } from \"aws-cdk-lib/aws-stepfunctions\";\nimport exp = require(\"constants\");\n\nconst synthetics = require('@aws-cdk/aws-synthetics');\n\nconst canary = async function () {  \n    await synthetics.executeHttpStep(\n        \"Verify API returns successful response\",\n        process.env.API_ENDPOINT\n        \n    );\n}\n\nexport const handler = async () => {\n   return   await canary();\n}"
+                          "script": "const synthetics = require('@aws-cdk/aws-synthetics');\n\nconst canary = async function () {  \n    await synthetics.executeHttpStep(\n        \"Verify API returns successful response\",\n        process.env.API_ENDPOINT,\n    );\n}\n\nexports.handler = async () => {\n   return await canary();\n}"
                         },
                         "executionRoleArn": {
                           "Fn::GetAtt": [
-                            "ServiceHealthCanaryservicecanaryServiceRoleE07E1461",
+                            "ServiceHealthCanarynew2servicecanaryServiceRoleF90ABA20",
                             "Arn"
                           ]
                         },
-                        "name": "service-canary",
+                        "name": "new2-service-canary",
                         "runConfig": {
                           "environmentVariables": {
                             "API_ENDPOINT": {
@@ -4300,10 +4300,10 @@
                                 "ApiEndpoint"
                               ]
                             },
-                            "DEPLOYMENT_TRIGGER": "1728360497852"
+                            "DEPLOYMENT_TRIGGER": "1728400081272"
                           }
                         },
-                        "runtimeVersion": "syn-nodejs-puppeteer-3.5",
+                        "runtimeVersion": "syn-nodejs-puppeteer-8.0",
                         "schedule": {
                           "durationInSeconds": "300",
                           "expression": "rate(1 minute)"

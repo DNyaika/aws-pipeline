@@ -372,7 +372,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/fe003e86ef0e5859d87f969bc5da22d16376bcf64ea8463b9a8017243aaa9544.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/95d3cfe50f610c29e8efc8630e0ca634108b1f7707df0474b794ae72335b213b.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -421,7 +421,7 @@
         "/ServiceStackTest/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B2c3c2e26952fd59777a0902c9fa537ea1"
+            "data": "ServiceLambdaCurrentVersionA30C27B28e3fe2c8902f538d5e055ec1261ebfa9"
           }
         ],
         "/ServiceStackTest/ServiceLambdaAlias/Resource": [
@@ -510,7 +510,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/335abe17dd0393fe834290323bb21dc767eef11fe1b99647c190f1376fd9c3b5.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0a3e824fb5830644d7ff46b06621173d7e7528c68ba4ae90f4ff32ff591159f8.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -559,7 +559,7 @@
         "/ServiceStackProd/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B2424bb0333849d9bae031be429c5197b0"
+            "data": "ServiceLambdaCurrentVersionA30C27B28bacdc6abe9806d16bf3edd2aceef08e"
           }
         ],
         "/ServiceStackProd/ServiceLambdaAlias/Resource": [
@@ -622,28 +622,28 @@
             "data": "ServiceDeploymentGroup688972BB"
           }
         ],
-        "/ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket/Resource": [
+        "/ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE"
+            "data": "ServiceHealthCanarynew2servicecanaryArtifactsBucketCA69F46A"
           }
         ],
-        "/ServiceStackProd/ServiceHealthCanary/service-canary/ArtifactsBucket/Policy/Resource": [
+        "/ServiceStackProd/ServiceHealthCanary/new2-service-canary/ArtifactsBucket/Policy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceHealthCanaryservicecanaryArtifactsBucketPolicy3AC3C049"
+            "data": "ServiceHealthCanarynew2servicecanaryArtifactsBucketPolicyB5F8FDDA"
           }
         ],
-        "/ServiceStackProd/ServiceHealthCanary/service-canary/ServiceRole/Resource": [
+        "/ServiceStackProd/ServiceHealthCanary/new2-service-canary/ServiceRole/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceHealthCanaryservicecanaryServiceRoleE07E1461"
+            "data": "ServiceHealthCanarynew2servicecanaryServiceRoleF90ABA20"
           }
         ],
-        "/ServiceStackProd/ServiceHealthCanary/service-canary/Resource": [
+        "/ServiceStackProd/ServiceHealthCanary/new2-service-canary/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceHealthCanaryservicecanary531B23CA"
+            "data": "ServiceHealthCanarynew2servicecanaryB6A0D099"
           }
         ],
         "/ServiceStackProd/ApiEndpointOutput": [
