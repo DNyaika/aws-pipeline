@@ -10,6 +10,7 @@ import { ComparisonOperator, Statistic, TreatMissingData } from 'aws-cdk-lib/aws
 import { Duration } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
+import { ServiceHealthCanary } from './constructs/service-health-canary';
 
 interface ServiceStackProps extends StackProps {
     stageName: string;
@@ -53,7 +54,7 @@ export class ServiceStack extends Stack {
         });
 
         if (props?.stageName === 'Prod') {
-            console.log('Entering the if statement: stageName is Prod'); 
+            console.log('Entering the if statement: stageName is Prod');
             new LambdaDeploymentGroup(this, 'ServiceDeploymentGroup', {
                 alias: alias,
                 deploymentConfig: LambdaDeploymentConfig.CANARY_10PERCENT_5MINUTES,
@@ -77,7 +78,10 @@ export class ServiceStack extends Stack {
                 ],
 
             });
-
+            new ServiceHealthCanary(this, 'ServiceHealthCanary', {
+                apiEndpoint: httpApi.apiEndpoint,
+                canaryName: "service-canary",
+            });
         }
 
 
