@@ -6,7 +6,8 @@ phases:
       - npm install -g npm@9  # Install the desired npm version
       - echo "Installing project dependencies"
       - npm install
-      - npm install @aws-cdk/aws-synthetics   
+      - echo "Installing AWS CDK dependencies"
+      - npm install @aws-cdk/aws-synthetics
   build:
     commands:
       - echo "Running build"
