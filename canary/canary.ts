@@ -1,4 +1,3 @@
-import { Wait } from "aws-cdk-lib/aws-stepfunctions";
 import exp = require("constants");
 
 const synthetics = require('@aws-cdk/aws-synthetics');
