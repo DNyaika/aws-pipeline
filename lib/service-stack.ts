@@ -80,7 +80,7 @@ export class ServiceStack extends Stack {
             });
             new ServiceHealthCanary(this, 'ServiceHealthCanary', {
                 apiEndpoint: httpApi.apiEndpoint,
-                canaryName: "service-canary",
+                canaryName: "new-service-canary",
             });
         }
 
