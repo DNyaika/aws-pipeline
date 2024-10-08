@@ -1,5 +1,3 @@
-import exp = require("constants");
-
 const synthetics = require('@aws-cdk/aws-synthetics');
 
 const canary = async function () {  
