@@ -7,6 +7,6 @@ const canary = async function () {
     );
 }
 
-export const handler = async () => {
-   return   await canary();
+exports.handler = async () => {
+   return await canary();
 }
