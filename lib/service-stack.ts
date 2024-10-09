@@ -63,7 +63,7 @@ export class ServiceStack extends Stack {
                 comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
             });
 
-        const canaryScriptPath = path.join(__dirname, '../../canary/canary.ts');
+        const canaryScriptPath = path.join(__dirname, '../../canary.ts');
         const canaryScript = fs.readFileSync(canaryScriptPath, { encoding: 'utf-8' });
 
         new Canary(this, 'ServiceHealthCanary', {
