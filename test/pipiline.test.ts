@@ -5,14 +5,14 @@ import { PipelineStack } from '../lib/pipeline-stack';
 import { ServiceStack } from '../lib/service-stack';
 import { BillingStack } from '../lib/billing-stack';
 
-/** 
+
 test('Pipeline Stack', () => {
     const app = new cdk.App();
     const stack = new PipelineStack(app, 'TestStack');
     const template = Template.fromStack(stack);
     expect(template.toJSON()).toMatchSnapshot();
 });
-
+/** 
 test('Adding service stage', () => {
     // GIVEN
     const app = new cdk.App();
