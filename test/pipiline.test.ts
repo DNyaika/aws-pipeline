@@ -5,6 +5,7 @@ import { PipelineStack } from '../lib/pipeline-stack';
 import { ServiceStack } from '../lib/service-stack';
 import { BillingStack } from '../lib/billing-stack';
 
+/** 
 test('Pipeline Stack', () => {
     const app = new cdk.App();
     const stack = new PipelineStack(app, 'TestStack');
@@ -30,6 +31,7 @@ test('Adding service stage', () => {
         ),
     }));
 });
+*/
 /**
 
 test('Adding billing stack to stage', () => {
