@@ -22,7 +22,7 @@ artifacts:
     canary:
       base-directory: canary
       files:
-        - '**/*'
+        - 'canary.ts'
 reports:
   jest_reports:
     files:
