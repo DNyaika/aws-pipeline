@@ -6,8 +6,6 @@ phases:
       - npm install -g npm@9  # Install the desired npm version
       - echo "Installing project dependencies"
       - npm install
-      - echo "Installing AWS CDK dependencies"
-      - npm install @aws-cdk/aws-synthetics
   build:
     commands:
       - echo "Running build"
@@ -20,6 +18,11 @@ artifacts:
   base-directory: cdk.out
   files:
     - '**/*'
+  secondary-artifacts:
+    canary:
+      base-directory: canary
+      files:
+        - '**/*'
 reports:
   jest_reports:
     files:

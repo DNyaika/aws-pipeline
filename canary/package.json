@@ -1,0 +1,14 @@
+{
+    "name": "canary",
+    "version": "1.0.0",
+    "description": "Canary script for AWS Synthetics",
+    "main": "canary.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+      "@aws-cdk/aws-synthetics": "^2.0.0"
+    },
+    "author": "",
+    "license": "ISC"
+  }
