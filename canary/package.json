@@ -7,7 +7,7 @@
       "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-      "@aws-cdk/aws-synthetics": "^2.0.0"
+        "@aws-cdk/aws-synthetics": "^1.204.0"
     },
     "author": "",
     "license": "ISC"
