@@ -14,7 +14,7 @@ export class ServiceHealthCanary extends Construct {
         super(scope, id);
 
         new Canary(this, props.canaryName, {
-            runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_8, // Updated to a non-deprecated runtime version
+            runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_6_2, // Updated to a non-deprecated runtime version
             canaryName: props.canaryName,
             schedule: Schedule.rate(Duration.minutes(1)),
             environmentVariables: {
