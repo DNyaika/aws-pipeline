@@ -14,18 +14,18 @@ export class ServiceHealthCanary extends Construct {
         super(scope, id);
 
         new Canary(this, props.canaryName, {
-            runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_5, // Use the correct runtime version
+            runtime: Runtime.SYNTHETICS_NODEJS_PUPPETEER_3_8, // Updated to a non-deprecated runtime version
             canaryName: props.canaryName,
             schedule: Schedule.rate(Duration.minutes(1)),
             environmentVariables: {
-                API_ENDPOINT: props.apiEndpoint,
-                DEPLOYMENT_TRIGGER: Date.now().toString(),
+            API_ENDPOINT: props.apiEndpoint,
+            DEPLOYMENT_TRIGGER: Date.now().toString(),
             },
             test: Test.custom({
-                code: Code.fromInline(
-                    fs.readFileSync(path.join(__dirname, "../../canary/canary.ts"), { encoding: 'utf-8' })
-                ),
-                handler: 'index.handler',
+            code: Code.fromInline(
+                fs.readFileSync(path.join(__dirname, "../../canary/canary.ts"), { encoding: 'utf-8' })
+            ),
+            handler: 'index.handler',
             }),
             timeToLive: Duration.minutes(5),
         });
