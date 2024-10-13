@@ -1,4 +1,4 @@
-const synthetics = require('@aws-cdk/aws-synthetics');
+const synthetics = require('Synthetics');
 
 const canary = async function () {  
     await synthetics.executeHttpStep(
