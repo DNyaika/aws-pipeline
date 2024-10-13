@@ -3155,7 +3155,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-13T10:26:11.777Z",
+                    "description": "Generated on 2024-10-13T11:08:19.895Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3219,7 +3219,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B248ed21c85bfc3bc68489f95d0f8e66ab",
+                        "ServiceLambdaCurrentVersionA30C27B2dc9c0e9463db18b44c1dd4673f5ba9dc",
                         "Version"
                       ]
                     },
@@ -3604,7 +3604,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-13T10:26:11.793Z",
+                    "description": "Generated on 2024-10-13T11:08:19.914Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3668,7 +3668,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2385dad2196e6ff30839d1650935fee31",
+                        "ServiceLambdaCurrentVersionA30C27B29c9968e511d7bef24546e5f937dae264",
                         "Version"
                       ]
                     },
@@ -4035,6 +4035,58 @@
               "version": "2.151.0"
             }
           },
+          "ServiceAlarmTopic": {
+            "id": "ServiceAlarmTopic",
+            "path": "ServiceStackProd/ServiceAlarmTopic",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProd/ServiceAlarmTopic/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {
+                    "topicName": "ServiceAlarmTopicProd"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                  "version": "2.151.0"
+                }
+              },
+              "davidnyaika2@gmail.com": {
+                "id": "davidnyaika2@gmail.com",
+                "path": "ServiceStackProd/ServiceAlarmTopic/davidnyaika2@gmail.com",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProd/ServiceAlarmTopic/davidnyaika2@gmail.com/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                      "aws:cdk:cloudformation:props": {
+                        "endpoint": "davidnyaika2@gmail.com",
+                        "protocol": "email",
+                        "topicArn": {
+                          "Ref": "ServiceAlarmTopicAA95BC33"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sns.CfnSubscription",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.Subscription",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sns.Topic",
+              "version": "2.151.0"
+            }
+          },
           "ServiceHealthCanary": {
             "id": "ServiceHealthCanary",
             "path": "ServiceStackProd/ServiceHealthCanary",
@@ -4300,7 +4352,7 @@
                                 "ApiEndpoint"
                               ]
                             },
-                            "DEPLOYMENT_TRIGGER": "1728815171810"
+                            "DEPLOYMENT_TRIGGER": "1728817699933"
                           }
                         },
                         "runtimeVersion": "syn-nodejs-puppeteer-6.2",
@@ -4319,6 +4371,52 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_synthetics.Canary",
+                  "version": "2.151.0"
+                }
+              },
+              "service-canary + FailedAlarm": {
+                "id": "service-canary + FailedAlarm",
+                "path": "ServiceStackProd/ServiceHealthCanary/service-canary + FailedAlarm",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProd/ServiceHealthCanary/service-canary + FailedAlarm/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                      "aws:cdk:cloudformation:props": {
+                        "alarmActions": [
+                          {
+                            "Ref": "ServiceAlarmTopicAA95BC33"
+                          }
+                        ],
+                        "alarmDescription": "Canary service-canary has failed",
+                        "alarmName": "service-canary + FailedAlarm",
+                        "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                        "dimensions": [
+                          {
+                            "name": "CanaryName",
+                            "value": {
+                              "Ref": "ServiceHealthCanaryservicecanary531B23CA"
+                            }
+                          }
+                        ],
+                        "evaluationPeriods": 1,
+                        "metricName": "Failed",
+                        "namespace": "CloudWatchSynthetics",
+                        "period": 300,
+                        "statistic": "Sum",
+                        "threshold": 1,
+                        "treatMissingData": "notBreaching"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
                   "version": "2.151.0"
                 }
               }

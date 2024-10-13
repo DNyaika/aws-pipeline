@@ -11,6 +11,8 @@ import { Duration } from 'aws-cdk-lib';
 import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Service } from 'aws-cdk-lib/aws-servicediscovery';
 import { ServiceHealthCanary } from './constructs/service-health-canary';
+import { Topic } from 'aws-cdk-lib/aws-sns';
+import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 
 interface ServiceStackProps extends StackProps {
     stageName: string;
@@ -78,9 +80,19 @@ export class ServiceStack extends Stack {
                 ],
 
             });
+  
+            const alarmTopic = new Topic(this, 'ServiceAlarmTopic', {
+                topicName: `ServiceAlarmTopic${props?.stageName}`,
+            });
+
+            alarmTopic.addSubscription(
+               new EmailSubscription('davidnyaika2@gmail.com'),
+            );
+
             new ServiceHealthCanary(this, 'ServiceHealthCanary', {
                 apiEndpoint: httpApi.apiEndpoint,
                 canaryName: "service-canary",
+                alarmTopic: alarmTopic,
             });
         }
 
