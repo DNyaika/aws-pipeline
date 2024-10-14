@@ -1,16 +1,17 @@
 {
   "version": "36.0.0",
   "files": {
-    "1f03691540e45e3a1ba5c52b655180405f3fc44ef916d0ef75413d3ad7630d36": {
+    "0e0d2284e6744ecbc0510e9304589ef78b3da741bd26216d2b4476d1463d5725": {
       "source": {
         "path": "BillingStack.template.json",
         "packaging": "file"
       },
       "destinations": {
-        "current_account-current_region": {
-          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "1f03691540e45e3a1ba5c52b655180405f3fc44ef916d0ef75413d3ad7630d36.json",
-          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        "975550358131-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-975550358131-us-east-1",
+          "objectKey": "0e0d2284e6744ecbc0510e9304589ef78b3da741bd26216d2b4476d1463d5725.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-file-publishing-role-975550358131-us-east-1"
         }
       }
     }

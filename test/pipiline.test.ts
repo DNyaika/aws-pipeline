@@ -5,19 +5,28 @@ import { PipelineStack } from '../lib/pipeline-stack';
 import { ServiceStack } from '../lib/service-stack';
 import { BillingStack } from '../lib/billing-stack';
 
+const testEnv: cdk.Environment = {
+    account: '123456789012',
+    region: 'us-east-1',
+};
 
 test('Pipeline Stack', () => {
     const app = new cdk.App();
-    const stack = new PipelineStack(app, 'TestStack');
+    const stack = new PipelineStack(app, 'TestStack',{
+        env: testEnv,
+    });
     const template = Template.fromStack(stack);
     expect(template.toJSON()).toMatchSnapshot();
 });
-/** 
+
 test('Adding service stage', () => {
     // GIVEN
     const app = new cdk.App();
-    const pipelineStack = new PipelineStack(app, 'PipelineStack');
+    const pipelineStack = new PipelineStack(app, 'PipelineStack',{
+        env: testEnv,
+    });
     const serviceStack = new ServiceStack(app, 'ServiceStack',{
+        env: testEnv,
         stageName: 'Test',
     });
     // WHEN
@@ -31,15 +40,20 @@ test('Adding service stage', () => {
         ),
     }));
 });
-*/
-/**
+
 
 test('Adding billing stack to stage', () => {
     // GIVEN
     const app = new cdk.App();
-    const serviceStack = new ServiceStack(app, 'ServiceStack');
-    const pipelineStack = new PipelineStack(app, 'PipelineStack');
+    const serviceStack = new ServiceStack(app, 'ServiceStack',{
+        env: testEnv,
+        stageName: 'Test',
+    });
+    const pipelineStack = new PipelineStack(app, 'PipelineStack',{
+        env: testEnv,
+    });
     const billingStack = new BillingStack(app, 'BillingStack', {
+        env: testEnv,
         budgetAmount: 5,
         emailAddress: 'test@example.com'
     });
@@ -66,4 +80,4 @@ test('Adding billing stack to stage', () => {
         )
     }));
 });
- */
+ 

@@ -275,6 +275,8 @@
                                   ],
                                   "Effect": "Allow",
                                   "Resource": [
+                                    "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
+                                    "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*",
                                     {
                                       "Fn::GetAtt": [
                                         "PipelineArtifactsBucket22248F97",
@@ -316,6 +318,12 @@
                                     {
                                       "Fn::GetAtt": [
                                         "PipelinePipelineUpdateCodePipelineActionRoleF10AA166",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PipelineProdBackupServiceUpdateCodePipelineActionRoleED07BC65",
                                         "Arn"
                                       ]
                                     },
@@ -373,12 +381,24 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::CodePipeline::Pipeline",
                   "aws:cdk:cloudformation:props": {
-                    "artifactStore": {
-                      "type": "S3",
-                      "location": {
-                        "Ref": "PipelineArtifactsBucket22248F97"
+                    "artifactStores": [
+                      {
+                        "region": "eu-west-1",
+                        "artifactStore": {
+                          "type": "S3",
+                          "location": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511"
+                        }
+                      },
+                      {
+                        "region": "us-east-1",
+                        "artifactStore": {
+                          "type": "S3",
+                          "location": {
+                            "Ref": "PipelineArtifactsBucket22248F97"
+                          }
+                        }
                       }
-                    },
+                    ],
                     "name": "Pipeline",
                     "pipelineType": "V2",
                     "restartExecutionOnUpdate": true,
@@ -581,7 +601,8 @@
                                 "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE",
                                 "Arn"
                               ]
-                            }
+                            },
+                            "region": "us-east-1"
                           },
                           {
                             "name": "Integration_Test",
@@ -661,7 +682,51 @@
                                 "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
                                 "Arn"
                               ]
-                            }
+                            },
+                            "region": "us-east-1"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "ProdBackup",
+                        "actions": [
+                          {
+                            "name": "Service_Update",
+                            "inputArtifacts": [
+                              {
+                                "name": "ServiceBuildOutput"
+                              },
+                              {
+                                "name": "CDKBuildOutput"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Deploy",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "CloudFormation"
+                            },
+                            "configuration": {
+                              "StackName": "ServiceStackProdBackup",
+                              "Capabilities": "CAPABILITY_NAMED_IAM",
+                              "RoleArn": {
+                                "Fn::GetAtt": [
+                                  "PipelineProdBackupServiceUpdateRoleF17F52C3",
+                                  "Arn"
+                                ]
+                              },
+                              "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+                              "ActionMode": "CREATE_UPDATE",
+                              "TemplatePath": "CDKBuildOutput::ServiceStackProdBackup.template.json"
+                            },
+                            "runOrder": 1,
+                            "roleArn": {
+                              "Fn::GetAtt": [
+                                "PipelineProdBackupServiceUpdateCodePipelineActionRoleED07BC65",
+                                "Arn"
+                              ]
+                            },
+                            "region": "eu-west-1"
                           }
                         ]
                       }
@@ -793,22 +858,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -909,22 +959,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -1035,22 +1070,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -1134,26 +1154,7 @@
                                             "cloudformation:ValidateTemplate"
                                           ],
                                           "Effect": "Allow",
-                                          "Resource": {
-                                            "Fn::Join": [
-                                              "",
-                                              [
-                                                "arn:",
-                                                {
-                                                  "Ref": "AWS::Partition"
-                                                },
-                                                ":cloudformation:",
-                                                {
-                                                  "Ref": "AWS::Region"
-                                                },
-                                                ":",
-                                                {
-                                                  "Ref": "AWS::AccountId"
-                                                },
-                                                ":stack/PipelineStack/*"
-                                              ]
-                                            ]
-                                          }
+                                          "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/PipelineStack/*"
                                         }
                                       ],
                                       "Version": "2012-10-17"
@@ -1339,22 +1340,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -1438,26 +1424,7 @@
                                             "cloudformation:ValidateTemplate"
                                           ],
                                           "Effect": "Allow",
-                                          "Resource": {
-                                            "Fn::Join": [
-                                              "",
-                                              [
-                                                "arn:",
-                                                {
-                                                  "Ref": "AWS::Partition"
-                                                },
-                                                ":cloudformation:",
-                                                {
-                                                  "Ref": "AWS::Region"
-                                                },
-                                                ":",
-                                                {
-                                                  "Ref": "AWS::AccountId"
-                                                },
-                                                ":stack/ServiceStackTest/*"
-                                              ]
-                                            ]
-                                          }
+                                          "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/ServiceStackTest/*"
                                         }
                                       ],
                                       "Version": "2012-10-17"
@@ -1633,22 +1600,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -1749,19 +1701,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":codepipeline:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":",
+                                          "arn:aws:codepipeline:us-east-1:975550358131:",
                                           {
                                             "Ref": "PipelineC660917D"
                                           }
@@ -1843,22 +1783,7 @@
                                       "Action": "sts:AssumeRole",
                                       "Effect": "Allow",
                                       "Principal": {
-                                        "AWS": {
-                                          "Fn::Join": [
-                                            "",
-                                            [
-                                              "arn:",
-                                              {
-                                                "Ref": "AWS::Partition"
-                                              },
-                                              ":iam::",
-                                              {
-                                                "Ref": "AWS::AccountId"
-                                              },
-                                              ":root"
-                                            ]
-                                          ]
-                                        }
+                                        "AWS": "arn:aws:iam::975550358131:root"
                                       }
                                     }
                                   ],
@@ -1942,26 +1867,7 @@
                                             "cloudformation:ValidateTemplate"
                                           ],
                                           "Effect": "Allow",
-                                          "Resource": {
-                                            "Fn::Join": [
-                                              "",
-                                              [
-                                                "arn:",
-                                                {
-                                                  "Ref": "AWS::Partition"
-                                                },
-                                                ":cloudformation:",
-                                                {
-                                                  "Ref": "AWS::Region"
-                                                },
-                                                ":",
-                                                {
-                                                  "Ref": "AWS::AccountId"
-                                                },
-                                                ":stack/ServiceStackProd/*"
-                                              ]
-                                            ]
-                                          }
+                                          "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/ServiceStackProd/*"
                                         }
                                       ],
                                       "Version": "2012-10-17"
@@ -2114,6 +2020,240 @@
                   "fqn": "constructs.Construct",
                   "version": "10.3.0"
                 }
+              },
+              "ProdBackup": {
+                "id": "ProdBackup",
+                "path": "PipelineStack/Pipeline/ProdBackup",
+                "children": {
+                  "Service_Update": {
+                    "id": "Service_Update",
+                    "path": "PipelineStack/Pipeline/ProdBackup/Service_Update",
+                    "children": {
+                      "CodePipelineActionRole": {
+                        "id": "CodePipelineActionRole",
+                        "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole",
+                        "children": {
+                          "ImportCodePipelineActionRole": {
+                            "id": "ImportCodePipelineActionRole",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole/ImportCodePipelineActionRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.151.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "AWS": "arn:aws:iam::975550358131:root"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.151.0"
+                            }
+                          },
+                          "8389e75f-0810-4838-bf64-d6f85a95cf83": {
+                            "id": "8389e75f-0810-4838-bf64-d6f85a95cf83",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole/8389e75f-0810-4838-bf64-d6f85a95cf83",
+                            "constructInfo": {
+                              "fqn": "constructs.Construct",
+                              "version": "10.3.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/CodePipelineActionRole/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": "iam:PassRole",
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineProdBackupServiceUpdateRoleF17F52C3",
+                                              "Arn"
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "Action": [
+                                            "s3:GetBucket*",
+                                            "s3:GetObject*",
+                                            "s3:List*"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": [
+                                            "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
+                                            "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+                                          ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "cloudformation:CreateStack",
+                                            "cloudformation:DescribeStack*",
+                                            "cloudformation:GetStackPolicy",
+                                            "cloudformation:GetTemplate*",
+                                            "cloudformation:SetStackPolicy",
+                                            "cloudformation:UpdateStack",
+                                            "cloudformation:ValidateTemplate"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": "arn:aws:cloudformation:eu-west-1:975550358131:stack/ServiceStackProdBackup/*"
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "PipelineProdBackupServiceUpdateCodePipelineActionRoleDefaultPolicy992056FF",
+                                    "roles": [
+                                      {
+                                        "Ref": "PipelineProdBackupServiceUpdateCodePipelineActionRoleED07BC65"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.151.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.151.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.151.0"
+                        }
+                      },
+                      "Role": {
+                        "id": "Role",
+                        "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/Role",
+                        "children": {
+                          "ImportRole": {
+                            "id": "ImportRole",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/Role/ImportRole",
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.Resource",
+                              "version": "2.151.0"
+                            }
+                          },
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/Role/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                              "aws:cdk:cloudformation:props": {
+                                "assumeRolePolicyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "sts:AssumeRole",
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                        "Service": "cloudformation.amazonaws.com"
+                                      }
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                              "version": "2.151.0"
+                            }
+                          },
+                          "DefaultPolicy": {
+                            "id": "DefaultPolicy",
+                            "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/Role/DefaultPolicy",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "PipelineStack/Pipeline/ProdBackup/Service_Update/Role/DefaultPolicy/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                                  "aws:cdk:cloudformation:props": {
+                                    "policyDocument": {
+                                      "Statement": [
+                                        {
+                                          "Action": [
+                                            "s3:GetBucket*",
+                                            "s3:GetObject*",
+                                            "s3:List*"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": [
+                                            "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
+                                            "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+                                          ]
+                                        },
+                                        {
+                                          "Action": "*",
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        }
+                                      ],
+                                      "Version": "2012-10-17"
+                                    },
+                                    "policyName": "PipelineProdBackupServiceUpdateRoleDefaultPolicy8F255754",
+                                    "roles": [
+                                      {
+                                        "Ref": "PipelineProdBackupServiceUpdateRoleF17F52C3"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                                  "version": "2.151.0"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_iam.Policy",
+                              "version": "2.151.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.Role",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
               }
             },
             "constructInfo": {
@@ -2186,19 +2326,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "CDKBuildProject96462ED9"
                                           },
@@ -2210,19 +2338,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "CDKBuildProject96462ED9"
                                           }
@@ -2244,19 +2360,7 @@
                                     "Fn::Join": [
                                       "",
                                       [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":codebuild:",
-                                        {
-                                          "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                          "Ref": "AWS::AccountId"
-                                        },
-                                        ":report-group/",
+                                        "arn:aws:codebuild:us-east-1:975550358131:report-group/",
                                         {
                                           "Ref": "CDKBuildProject96462ED9"
                                         },
@@ -2438,19 +2542,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "ServiceBuildProject6D228AFA"
                                           },
@@ -2462,19 +2554,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "ServiceBuildProject6D228AFA"
                                           }
@@ -2496,19 +2576,7 @@
                                     "Fn::Join": [
                                       "",
                                       [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":codebuild:",
-                                        {
-                                          "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                          "Ref": "AWS::AccountId"
-                                        },
-                                        ":report-group/",
+                                        "arn:aws:codebuild:us-east-1:975550358131:report-group/",
                                         {
                                           "Ref": "ServiceBuildProject6D228AFA"
                                         },
@@ -2690,19 +2758,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "ServiceIntegrationTestsProject3F2F4E22"
                                           },
@@ -2714,19 +2770,7 @@
                                       "Fn::Join": [
                                         "",
                                         [
-                                          "arn:",
-                                          {
-                                            "Ref": "AWS::Partition"
-                                          },
-                                          ":logs:",
-                                          {
-                                            "Ref": "AWS::Region"
-                                          },
-                                          ":",
-                                          {
-                                            "Ref": "AWS::AccountId"
-                                          },
-                                          ":log-group:/aws/codebuild/",
+                                          "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
                                           {
                                             "Ref": "ServiceIntegrationTestsProject3F2F4E22"
                                           }
@@ -2748,19 +2792,7 @@
                                     "Fn::Join": [
                                       "",
                                       [
-                                        "arn:",
-                                        {
-                                          "Ref": "AWS::Partition"
-                                        },
-                                        ":codebuild:",
-                                        {
-                                          "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                          "Ref": "AWS::AccountId"
-                                        },
-                                        ":report-group/",
+                                        "arn:aws:codebuild:us-east-1:975550358131:report-group/",
                                         {
                                           "Ref": "ServiceIntegrationTestsProject3F2F4E22"
                                         },
@@ -2881,14 +2913,6 @@
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.151.0"
                 }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "PipelineStack/CDKMetadata/Condition",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
-                  "version": "2.151.0"
-                }
               }
             },
             "constructInfo": {
@@ -2978,14 +3002,6 @@
                 "path": "BillingStack/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
-                  "version": "2.151.0"
-                }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "BillingStack/CDKMetadata/Condition",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
                   "version": "2.151.0"
                 }
               }
@@ -3155,7 +3171,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-13T11:08:19.895Z",
+                    "description": "Generated on 2024-10-14T17:17:39.459Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3219,7 +3235,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B2dc9c0e9463db18b44c1dd4673f5ba9dc",
+                        "ServiceLambdaCurrentVersionA30C27B275510df04a09e22f721632640af37a29",
                         "Version"
                       ]
                     },
@@ -3314,19 +3330,7 @@
                           "Fn::Join": [
                             "",
                             [
-                              "arn:",
-                              {
-                                "Ref": "AWS::Partition"
-                              },
-                              ":execute-api:",
-                              {
-                                "Ref": "AWS::Region"
-                              },
-                              ":",
-                              {
-                                "Ref": "AWS::AccountId"
-                              },
-                              ":",
+                              "arn:aws:execute-api:us-east-1:975550358131:",
                               {
                                 "Ref": "ServiceApi4633ACD6"
                               },
@@ -3427,14 +3431,6 @@
                 "path": "ServiceStackTest/CDKMetadata/Default",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnResource",
-                  "version": "2.151.0"
-                }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "ServiceStackTest/CDKMetadata/Condition",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
                   "version": "2.151.0"
                 }
               }
@@ -3604,7 +3600,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-13T11:08:19.914Z",
+                    "description": "Generated on 2024-10-14T17:17:39.472Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3668,7 +3664,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B29c9968e511d7bef24546e5f937dae264",
+                        "ServiceLambdaCurrentVersionA30C27B29767200fb59fdb10b4ec3a0411d402d8",
                         "Version"
                       ]
                     },
@@ -3763,19 +3759,7 @@
                           "Fn::Join": [
                             "",
                             [
-                              "arn:",
-                              {
-                                "Ref": "AWS::Partition"
-                              },
-                              ":execute-api:",
-                              {
-                                "Ref": "AWS::Region"
-                              },
-                              ":",
-                              {
-                                "Ref": "AWS::AccountId"
-                              },
-                              ":",
+                              "arn:aws:execute-api:us-east-1:975550358131:",
                               {
                                 "Ref": "ServiceApi4633ACD6"
                               },
@@ -4277,26 +4261,7 @@
                                         "logs:PutLogEvents"
                                       ],
                                       "Effect": "Allow",
-                                      "Resource": {
-                                        "Fn::Join": [
-                                          "",
-                                          [
-                                            "arn:",
-                                            {
-                                              "Ref": "AWS::Partition"
-                                            },
-                                            ":logs:",
-                                            {
-                                              "Ref": "AWS::Region"
-                                            },
-                                            ":",
-                                            {
-                                              "Ref": "AWS::AccountId"
-                                            },
-                                            ":log-group:/aws/lambda/cwsyn-*"
-                                          ]
-                                        ]
-                                      }
+                                      "Resource": "arn:aws:logs:us-east-1:975550358131:log-group:/aws/lambda/cwsyn-*"
                                     }
                                   ],
                                   "Version": "2012-10-17"
@@ -4352,7 +4317,7 @@
                                 "ApiEndpoint"
                               ]
                             },
-                            "DEPLOYMENT_TRIGGER": "1728817699933"
+                            "DEPLOYMENT_TRIGGER": "1728926259483"
                           }
                         },
                         "runtimeVersion": "syn-nodejs-puppeteer-6.2",
@@ -4445,14 +4410,6 @@
                   "fqn": "aws-cdk-lib.CfnResource",
                   "version": "2.151.0"
                 }
-              },
-              "Condition": {
-                "id": "Condition",
-                "path": "ServiceStackProd/CDKMetadata/Condition",
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.CfnCondition",
-                  "version": "2.151.0"
-                }
               }
             },
             "constructInfo": {
@@ -4474,6 +4431,1125 @@
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnRule",
               "version": "2.151.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.151.0"
+        }
+      },
+      "ServiceStackProdBackup": {
+        "id": "ServiceStackProdBackup",
+        "path": "ServiceStackProdBackup",
+        "children": {
+          "ServiceLambda": {
+            "id": "ServiceLambda",
+            "path": "ServiceStackProdBackup/ServiceLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ServiceStackProdBackup/ServiceLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "ServiceStackProdBackup/ServiceLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ServiceStackProdBackup/ServiceLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackProdBackup/ServiceLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ServiceLambdaServiceRoleDefaultPolicy99B6DE7C",
+                            "roles": [
+                              {
+                                "Ref": "ServiceLambdaServiceRoleF5A50FBC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.151.0"
+                }
+              },
+              "LambdaSourceBucketNameParameter": {
+                "id": "LambdaSourceBucketNameParameter",
+                "path": "ServiceStackProdBackup/ServiceLambda/LambdaSourceBucketNameParameter",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.151.0"
+                }
+              },
+              "LambdaSourceObjectKeyParameter": {
+                "id": "LambdaSourceObjectKeyParameter",
+                "path": "ServiceStackProdBackup/ServiceLambda/LambdaSourceObjectKeyParameter",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3"
+                      },
+                      "s3Key": {
+                        "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
+                      }
+                    },
+                    "description": "Generated on 2024-10-14T17:17:39.486Z",
+                    "functionName": "ServiceLambdaProd",
+                    "handler": "src/lambda.handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaServiceRoleF5A50FBC",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.151.0"
+                }
+              },
+              "CurrentVersion": {
+                "id": "CurrentVersion",
+                "path": "ServiceStackProdBackup/ServiceLambda/CurrentVersion",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceLambda/CurrentVersion/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Version",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "ServiceLambdaA7DE4D2C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnVersion",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Version",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceLambdaAlias": {
+            "id": "ServiceLambdaAlias",
+            "path": "ServiceStackProdBackup/ServiceLambdaAlias",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceLambdaAlias/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Alias",
+                  "aws:cdk:cloudformation:props": {
+                    "functionName": {
+                      "Ref": "ServiceLambdaA7DE4D2C"
+                    },
+                    "functionVersion": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaCurrentVersionA30C27B283430b77e984a5dfb260aa9c57b6bbf9",
+                        "Version"
+                      ]
+                    },
+                    "name": "ServiceLambdaAliasProd"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnAlias",
+                  "version": "2.151.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "ServiceStackProdBackup/ServiceLambdaAlias/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Alias",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceApi": {
+            "id": "ServiceApi",
+            "path": "ServiceStackProdBackup/ServiceApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Api",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "ServiceApiProd",
+                    "protocolType": "HTTP"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnApi",
+                  "version": "2.151.0"
+                }
+              },
+              "DefaultRoute": {
+                "id": "DefaultRoute",
+                "path": "ServiceStackProdBackup/ServiceApi/DefaultRoute",
+                "children": {
+                  "ServiceLambdaIntegration": {
+                    "id": "ServiceLambdaIntegration",
+                    "path": "ServiceStackProdBackup/ServiceApi/DefaultRoute/ServiceLambdaIntegration",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackProdBackup/ServiceApi/DefaultRoute/ServiceLambdaIntegration/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "ServiceApi4633ACD6"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Ref": "ServiceLambdaAlias89D0CD0D"
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpIntegration",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "ServiceLambdaIntegration-Permission": {
+                    "id": "ServiceLambdaIntegration-Permission",
+                    "path": "ServiceStackProdBackup/ServiceApi/DefaultRoute/ServiceLambdaIntegration-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Ref": "ServiceLambdaAlias89D0CD0D"
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:aws:execute-api:eu-west-1:975550358131:",
+                              {
+                                "Ref": "ServiceApi4633ACD6"
+                              },
+                              "/*/*"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceApi/DefaultRoute/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "ServiceApi4633ACD6"
+                        },
+                        "authorizationType": "NONE",
+                        "routeKey": "$default",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "ServiceApiDefaultRouteServiceLambdaIntegration9CFAFDC9"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpRoute",
+                  "version": "2.151.0"
+                }
+              },
+              "DefaultStage": {
+                "id": "DefaultStage",
+                "path": "ServiceStackProdBackup/ServiceApi/DefaultStage",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceApi/DefaultStage/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "ServiceApi4633ACD6"
+                        },
+                        "autoDeploy": true,
+                        "stageName": "$default"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnStage",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpStage",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpApi",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceErrorAlarm": {
+            "id": "ServiceErrorAlarm",
+            "path": "ServiceStackProdBackup/ServiceErrorAlarm",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceErrorAlarm/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmDescription": "Service is experiencing errors",
+                    "alarmName": "ServiceErrorAlarmProd",
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "ApiId",
+                        "value": {
+                          "Ref": "ServiceApi4633ACD6"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "metricName": "5xx",
+                    "namespace": "AWS/ApiGateway",
+                    "period": 60,
+                    "statistic": "Sum",
+                    "threshold": 1,
+                    "treatMissingData": "notBreaching"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceDeploymentGroup": {
+            "id": "ServiceDeploymentGroup",
+            "path": "ServiceStackProdBackup/ServiceDeploymentGroup",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ServiceStackProdBackup/ServiceDeploymentGroup/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "ServiceStackProdBackup/ServiceDeploymentGroup/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceDeploymentGroup/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codedeploy.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSCodeDeployRoleForLambdaLimited"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.151.0"
+                }
+              },
+              "Application": {
+                "id": "Application",
+                "path": "ServiceStackProdBackup/ServiceDeploymentGroup/Application",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceDeploymentGroup/Application/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::CodeDeploy::Application",
+                      "aws:cdk:cloudformation:props": {
+                        "computePlatform": "Lambda"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_codedeploy.CfnApplication",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codedeploy.LambdaApplication",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceDeploymentGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeDeploy::DeploymentGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmConfiguration": {
+                      "alarms": [
+                        {
+                          "name": {
+                            "Ref": "ServiceErrorAlarm0BA55CC3"
+                          }
+                        }
+                      ],
+                      "enabled": true
+                    },
+                    "applicationName": {
+                      "Ref": "ServiceDeploymentGroupApplication9F46E868"
+                    },
+                    "autoRollbackConfiguration": {
+                      "enabled": true,
+                      "events": [
+                        "DEPLOYMENT_FAILURE",
+                        "DEPLOYMENT_STOP_ON_ALARM"
+                      ]
+                    },
+                    "deploymentConfigName": "CodeDeployDefault.LambdaCanary10Percent5Minutes",
+                    "deploymentStyle": {
+                      "deploymentType": "BLUE_GREEN",
+                      "deploymentOption": "WITH_TRAFFIC_CONTROL"
+                    },
+                    "serviceRoleArn": {
+                      "Fn::GetAtt": [
+                        "ServiceDeploymentGroupServiceRole9638530E",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codedeploy.CfnDeploymentGroup",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codedeploy.LambdaDeploymentGroup",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceAlarmTopic": {
+            "id": "ServiceAlarmTopic",
+            "path": "ServiceStackProdBackup/ServiceAlarmTopic",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackProdBackup/ServiceAlarmTopic/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {
+                    "topicName": "ServiceAlarmTopicProd"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                  "version": "2.151.0"
+                }
+              },
+              "davidnyaika2@gmail.com": {
+                "id": "davidnyaika2@gmail.com",
+                "path": "ServiceStackProdBackup/ServiceAlarmTopic/davidnyaika2@gmail.com",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceAlarmTopic/davidnyaika2@gmail.com/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::SNS::Subscription",
+                      "aws:cdk:cloudformation:props": {
+                        "endpoint": "davidnyaika2@gmail.com",
+                        "protocol": "email",
+                        "topicArn": {
+                          "Ref": "ServiceAlarmTopicAA95BC33"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_sns.CfnSubscription",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.Subscription",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_sns.Topic",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceHealthCanary": {
+            "id": "ServiceHealthCanary",
+            "path": "ServiceStackProdBackup/ServiceHealthCanary",
+            "children": {
+              "service-canary": {
+                "id": "service-canary",
+                "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary",
+                "children": {
+                  "ArtifactsBucket": {
+                    "id": "ArtifactsBucket",
+                    "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ArtifactsBucket",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ArtifactsBucket/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                          "aws:cdk:cloudformation:props": {
+                            "bucketEncryption": {
+                              "serverSideEncryptionConfiguration": [
+                                {
+                                  "serverSideEncryptionByDefault": {
+                                    "sseAlgorithm": "aws:kms"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                          "version": "2.151.0"
+                        }
+                      },
+                      "Policy": {
+                        "id": "Policy",
+                        "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ArtifactsBucket/Policy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ArtifactsBucket/Policy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                              "aws:cdk:cloudformation:props": {
+                                "bucket": {
+                                  "Ref": "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE"
+                                },
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "s3:*",
+                                      "Condition": {
+                                        "Bool": {
+                                          "aws:SecureTransport": "false"
+                                        }
+                                      },
+                                      "Effect": "Deny",
+                                      "Principal": {
+                                        "AWS": "*"
+                                      },
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Fn::Join": [
+                                            "",
+                                            [
+                                              {
+                                                "Fn::GetAtt": [
+                                                  "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                                  "Arn"
+                                                ]
+                                              },
+                                              "/*"
+                                            ]
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                              "version": "2.151.0"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.Bucket",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ServiceRole",
+                    "children": {
+                      "ImportServiceRole": {
+                        "id": "ImportServiceRole",
+                        "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ServiceRole/ImportServiceRole",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.Resource",
+                          "version": "2.151.0"
+                        }
+                      },
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "lambda.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policies": [
+                              {
+                                "policyName": "canaryPolicy",
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "s3:ListAllMyBuckets",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": "s3:GetBucketLocation",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::GetAtt": [
+                                          "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                          "Arn"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "s3:PutObject",
+                                      "Effect": "Allow",
+                                      "Resource": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            {
+                                              "Fn::GetAtt": [
+                                                "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE",
+                                                "Arn"
+                                              ]
+                                            },
+                                            "/*"
+                                          ]
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "Action": "cloudwatch:PutMetricData",
+                                      "Condition": {
+                                        "StringEquals": {
+                                          "cloudwatch:namespace": "CloudWatchSynthetics"
+                                        }
+                                      },
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    },
+                                    {
+                                      "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": "arn:aws:logs:eu-west-1:975550358131:log-group:/aws/lambda/cwsyn-*"
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Role",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Synthetics::Canary",
+                      "aws:cdk:cloudformation:props": {
+                        "artifactS3Location": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "s3://",
+                              {
+                                "Ref": "ServiceHealthCanaryservicecanaryArtifactsBucket4C4DE7EE"
+                              }
+                            ]
+                          ]
+                        },
+                        "code": {
+                          "handler": "index.handler",
+                          "script": "const synthetics = require('Synthetics');\n\nconst canary = async function () {  \n    await synthetics.executeHttpStep(\n        \"Verify API returns successful response\",\n        process.env.API_ENDPOINT,\n    );\n}\n\nexports.handler = async () => {\n   return await canary();\n}"
+                        },
+                        "executionRoleArn": {
+                          "Fn::GetAtt": [
+                            "ServiceHealthCanaryservicecanaryServiceRoleE07E1461",
+                            "Arn"
+                          ]
+                        },
+                        "name": "service-canary",
+                        "runConfig": {
+                          "environmentVariables": {
+                            "API_ENDPOINT": {
+                              "Fn::GetAtt": [
+                                "ServiceApi4633ACD6",
+                                "ApiEndpoint"
+                              ]
+                            },
+                            "DEPLOYMENT_TRIGGER": "1728926259489"
+                          }
+                        },
+                        "runtimeVersion": "syn-nodejs-puppeteer-6.2",
+                        "schedule": {
+                          "durationInSeconds": "300",
+                          "expression": "rate(1 minute)"
+                        },
+                        "startCanaryAfterCreation": true
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_synthetics.CfnCanary",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_synthetics.Canary",
+                  "version": "2.151.0"
+                }
+              },
+              "service-canary + FailedAlarm": {
+                "id": "service-canary + FailedAlarm",
+                "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary + FailedAlarm",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackProdBackup/ServiceHealthCanary/service-canary + FailedAlarm/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                      "aws:cdk:cloudformation:props": {
+                        "alarmActions": [
+                          {
+                            "Ref": "ServiceAlarmTopicAA95BC33"
+                          }
+                        ],
+                        "alarmDescription": "Canary service-canary has failed",
+                        "alarmName": "service-canary + FailedAlarm",
+                        "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                        "dimensions": [
+                          {
+                            "name": "CanaryName",
+                            "value": {
+                              "Ref": "ServiceHealthCanaryservicecanary531B23CA"
+                            }
+                          }
+                        ],
+                        "evaluationPeriods": 1,
+                        "metricName": "Failed",
+                        "namespace": "CloudWatchSynthetics",
+                        "period": 300,
+                        "statistic": "Sum",
+                        "threshold": 1,
+                        "treatMissingData": "notBreaching"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "ApiEndpointOutput": {
+            "id": "ApiEndpointOutput",
+            "path": "ServiceStackProdBackup/ApiEndpointOutput",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.151.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "ServiceStackProdBackup/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "ServiceStackProdBackup/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "ServiceStackProdBackup/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.151.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "ServiceStackProdBackup/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.151.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.151.0"
+        }
+      },
+      "cross-region-stack-975550358131:eu-west-1": {
+        "id": "cross-region-stack-975550358131:eu-west-1",
+        "path": "cross-region-stack-975550358131:eu-west-1",
+        "children": {
+          "Default": {
+            "id": "Default",
+            "path": "cross-region-stack-975550358131:eu-west-1/Default",
+            "children": {
+              "CrossRegionCodePipelineReplicationBucket": {
+                "id": "CrossRegionCodePipelineReplicationBucket",
+                "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                      "aws:cdk:cloudformation:props": {
+                        "bucketEncryption": {
+                          "serverSideEncryptionConfiguration": [
+                            {
+                              "serverSideEncryptionByDefault": {
+                                "sseAlgorithm": "aws:kms"
+                              }
+                            }
+                          ]
+                        },
+                        "bucketName": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
+                        "publicAccessBlockConfiguration": {
+                          "blockPublicAcls": true,
+                          "blockPublicPolicy": true,
+                          "ignorePublicAcls": true,
+                          "restrictPublicBuckets": true
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Policy": {
+                    "id": "Policy",
+                    "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket/Policy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket/Policy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                          "aws:cdk:cloudformation:props": {
+                            "bucket": {
+                              "Ref": "CrossRegionCodePipelineReplicationBucketFC3227F2"
+                            },
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "s3:*",
+                                  "Condition": {
+                                    "Bool": {
+                                      "aws:SecureTransport": "false"
+                                    }
+                                  },
+                                  "Effect": "Deny",
+                                  "Principal": {
+                                    "AWS": "*"
+                                  },
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "CrossRegionCodePipelineReplicationBucketFC3227F2",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "CrossRegionCodePipelineReplicationBucketFC3227F2",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.Bucket",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "cross-region-stack-975550358131:eu-west-1/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "cross-region-stack-975550358131:eu-west-1/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
             }
           }
         },
