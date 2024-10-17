@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/f88a4ac7d08ac4f709ba7cbe547c7669fa17f4f3bf2fb464ba0bf64aaad11c57.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/7d5dab2cb03bd781e4d301af76bffadf4bf751eed231481160a73e568679d234.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -31,6 +31,7 @@
         }
       },
       "dependencies": [
+        "cross-account-support-stack-503561423934",
         "cross-region-stack-975550358131:eu-west-1",
         "PipelineStack.assets"
       ],
@@ -51,6 +52,18 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineNotificationTopicPolicyDA8EB620"
+          }
+        ],
+        "/PipelineStack/Pipeline/ArtifactsBucketEncryptionKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucketEncryptionKey01D58D69"
+          }
+        ],
+        "/PipelineStack/Pipeline/ArtifactsBucketEncryptionKeyAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineArtifactsBucketEncryptionKeyAlias5C510EEE"
           }
         ],
         "/PipelineStack/Pipeline/ArtifactsBucket/Resource": [
@@ -385,7 +398,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/930a91e7d0da1ed144e4782df864f74f86f953b44b7630ced134f588d551328e.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/1d21a0dc6a3ed8139dcbeb2496a63a03a07c954a5ee92f9426fceac6b4867bd4.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -434,7 +447,7 @@
         "/ServiceStackTest/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B275510df04a09e22f721632640af37a29"
+            "data": "ServiceLambdaCurrentVersionA30C27B2a78f24cf15671bb2c75303d3386b904c"
           }
         ],
         "/ServiceStackTest/ServiceLambdaAlias/Resource": [
@@ -500,6 +513,138 @@
       },
       "displayName": "ServiceStackTest"
     },
+    "ServiceStackTest2.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "ServiceStackTest2.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "ServiceStackTest2": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://503561423934/us-east-1",
+      "properties": {
+        "templateFile": "ServiceStackTest2.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-deploy-role-503561423934-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-cfn-exec-role-503561423934-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/7a0808de6e2d2a92e47a7ceb24fc87447a9e92ed3d97fd2ce74dc264983fd13c.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "ServiceStackTest2.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-lookup-role-503561423934-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "ServiceStackTest2.assets"
+      ],
+      "metadata": {
+        "/ServiceStackTest2/ServiceLambda/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaServiceRoleF5A50FBC"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambda/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaServiceRoleDefaultPolicy99B6DE7C"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambda/LambdaSourceBucketNameParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambda/LambdaSourceObjectKeyParameter": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambda/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaA7DE4D2C"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambda/CurrentVersion/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaCurrentVersionA30C27B25c39e57a4e35fc8063e90466e87ebac7"
+          }
+        ],
+        "/ServiceStackTest2/ServiceLambdaAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceLambdaAlias89D0CD0D"
+          }
+        ],
+        "/ServiceStackTest2/ServiceApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApi4633ACD6"
+          }
+        ],
+        "/ServiceStackTest2/ServiceApi/DefaultRoute/ServiceLambdaIntegration/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegration9CFAFDC9"
+          }
+        ],
+        "/ServiceStackTest2/ServiceApi/DefaultRoute/ServiceLambdaIntegration-Permission": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRouteServiceLambdaIntegrationPermission05D4CD54"
+          }
+        ],
+        "/ServiceStackTest2/ServiceApi/DefaultRoute/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultRoute1D980EEE"
+          }
+        ],
+        "/ServiceStackTest2/ServiceApi/DefaultStage/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ServiceApiDefaultStage0A39469D"
+          }
+        ],
+        "/ServiceStackTest2/ApiEndpointOutput": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEndpointOutput"
+          }
+        ],
+        "/ServiceStackTest2/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/ServiceStackTest2/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/ServiceStackTest2/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "ServiceStackTest2"
+    },
     "ServiceStackProd.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
@@ -517,7 +662,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/fab6e06adaa0007d51d607437b0bc68e1ff649ad99fc0abfc1ca21efe1bd631a.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/59b4370f96b2d9244e5fc4000451f7961ecb4adce563ddb5f4f1317f5ade5275.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -566,7 +711,7 @@
         "/ServiceStackProd/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B29767200fb59fdb10b4ec3a0411d402d8"
+            "data": "ServiceLambdaCurrentVersionA30C27B2fbd3802f3200ab0665206eec9b9f243b"
           }
         ],
         "/ServiceStackProd/ServiceLambdaAlias/Resource": [
@@ -715,7 +860,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-eu-west-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-eu-west-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-eu-west-1/49141892465434f31b14560137685b5b8847086b392aae24830b4b1217fd452e.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-eu-west-1/eaa449262a3d11306c52159db390849f9eb6941fce368695e443daffa2ce6354.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -764,7 +909,7 @@
         "/ServiceStackProdBackup/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B283430b77e984a5dfb260aa9c57b6bbf9"
+            "data": "ServiceLambdaCurrentVersionA30C27B25132e0df77f0c905977e160c5bc05d73"
           }
         ],
         "/ServiceStackProdBackup/ServiceLambdaAlias/Resource": [
@@ -896,6 +1041,85 @@
       },
       "displayName": "ServiceStackProdBackup"
     },
+    "cross-account-support-stack-503561423934.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "cross-account-support-stack-503561423934.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "cross-account-support-stack-503561423934": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://503561423934/us-east-1",
+      "properties": {
+        "templateFile": "cross-account-support-stack-503561423934.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-deploy-role-503561423934-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-cfn-exec-role-503561423934-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/9efc94ad2139de8424146b440295d92337851b8fbee62101c097e6aa616cd67b.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "cross-account-support-stack-503561423934.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-lookup-role-503561423934-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        },
+        "stackName": "PipelineStack-support-503561423934"
+      },
+      "dependencies": [
+        "cross-account-support-stack-503561423934.assets"
+      ],
+      "metadata": {
+        "/cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateActionRoleD8C8CD88"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateActionRoleDefaultPolicy2E557150"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateDeploymentRole0FA4044D"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateDeploymentRoleDefaultPolicy81014B64"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/cross-account-support-stack-503561423934/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "cross-account-support-stack-503561423934"
+    },
     "cross-region-stack-975550358131:eu-west-1": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://975550358131/eu-west-1",
@@ -908,6 +1132,18 @@
         "stackName": "PipelineStack-support-eu-west-1"
       },
       "metadata": {
+        "/cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionKey/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CrossRegionCodePipelineReplicationBucketEncryptionKey70216490"
+          }
+        ],
+        "/cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionAlias/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CrossRegionCodePipelineReplicationBucketEncryptionAliasF1A0F37D"
+          }
+        ],
         "/cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket/Resource": [
           {
             "type": "aws:cdk:logicalId",

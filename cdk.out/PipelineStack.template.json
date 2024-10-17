@@ -51,6 +51,60 @@
     "aws:cdk:path": "PipelineStack/PipelineNotificationTopic/Policy/Resource"
    }
   },
+  "PipelineArtifactsBucketEncryptionKey01D58D69": {
+   "Type": "AWS::KMS::Key",
+   "Properties": {
+    "KeyPolicy": {
+     "Statement": [
+      {
+       "Action": "kms:*",
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": "arn:aws:iam::975550358131:root"
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+         "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+        ]
+       },
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKey/Resource"
+   }
+  },
+  "PipelineArtifactsBucketEncryptionKeyAlias5C510EEE": {
+   "Type": "AWS::KMS::Alias",
+   "Properties": {
+    "AliasName": "alias/codepipeline-pipelinestack-pipeline-9db740af",
+    "TargetKeyId": {
+     "Fn::GetAtt": [
+      "PipelineArtifactsBucketEncryptionKey01D58D69",
+      "Arn"
+     ]
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKeyAlias/Resource"
+   }
+  },
   "PipelineArtifactsBucket22248F97": {
    "Type": "AWS::S3::Bucket",
    "Properties": {
@@ -58,11 +112,18 @@
      "ServerSideEncryptionConfiguration": [
       {
        "ServerSideEncryptionByDefault": {
+        "KMSMasterKeyID": {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucketEncryptionKey01D58D69",
+          "Arn"
+         ]
+        },
         "SSEAlgorithm": "aws:kms"
        }
       }
      ]
     },
+    "BucketName": "pipelinestackeartifactsbucket5409dc84bcf0e6cfd351",
     "PublicAccessBlockConfiguration": {
      "BlockPublicAcls": true,
      "BlockPublicPolicy": true,
@@ -94,6 +155,42 @@
        "Effect": "Deny",
        "Principal": {
         "AWS": "*"
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": [
+         "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+         "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+        ]
        },
        "Resource": [
         {
@@ -191,9 +288,29 @@
        ]
       },
       {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        "*",
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucketEncryptionKey01D58D69",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Resource": [
+        "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
         {
          "Fn::GetAtt": [
           "PipelineBuildCDKBuildCodePipelineActionRole15F4B424",
@@ -258,6 +375,10 @@
     "ArtifactStores": [
      {
       "ArtifactStore": {
+       "EncryptionKey": {
+        "Id": "arn:aws:kms:eu-west-1:975550358131:alias/port-eu-tencryptionalias25ca5bc7d7d4ec6278fd",
+        "Type": "KMS"
+       },
        "Location": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
        "Type": "S3"
       },
@@ -265,6 +386,15 @@
      },
      {
       "ArtifactStore": {
+       "EncryptionKey": {
+        "Id": {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucketEncryptionKey01D58D69",
+          "Arn"
+         ]
+        },
+        "Type": "KMS"
+       },
        "Location": {
         "Ref": "PipelineArtifactsBucket22248F97"
        },
@@ -517,6 +647,39 @@
        }
       ],
       "Name": "Test"
+     },
+     {
+      "Actions": [
+       {
+        "ActionTypeId": {
+         "Category": "Deploy",
+         "Owner": "AWS",
+         "Provider": "CloudFormation",
+         "Version": "1"
+        },
+        "Configuration": {
+         "StackName": "ServiceStackTest2",
+         "Capabilities": "CAPABILITY_NAMED_IAM",
+         "RoleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+         "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+         "ActionMode": "CREATE_UPDATE",
+         "TemplatePath": "CDKBuildOutput::ServiceStackTest2.template.json"
+        },
+        "InputArtifacts": [
+         {
+          "Name": "ServiceBuildOutput"
+         },
+         {
+          "Name": "CDKBuildOutput"
+         }
+        ],
+        "Name": "Service_Update",
+        "Region": "us-east-1",
+        "RoleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
+        "RunOrder": 1
+       }
+      ],
+      "Name": "CrossAccountTest"
      },
      {
       "Actions": [
@@ -835,6 +998,19 @@
       },
       {
        "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
         "cloudformation:CreateStack",
         "cloudformation:DescribeStack*",
         "cloudformation:GetStackPolicy",
@@ -914,6 +1090,19 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
       },
       {
        "Action": "*",
@@ -1001,6 +1190,19 @@
       },
       {
        "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
         "cloudformation:CreateStack",
         "cloudformation:DescribeStack*",
         "cloudformation:GetStackPolicy",
@@ -1080,6 +1282,19 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
       },
       {
        "Action": "*",
@@ -1277,6 +1492,19 @@
       },
       {
        "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
         "cloudformation:CreateStack",
         "cloudformation:DescribeStack*",
         "cloudformation:GetStackPolicy",
@@ -1358,6 +1586,19 @@
        ]
       },
       {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
        "Action": "*",
        "Effect": "Allow",
        "Resource": "*"
@@ -1425,6 +1666,14 @@
       },
       {
        "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
         "cloudformation:CreateStack",
         "cloudformation:DescribeStack*",
         "cloudformation:GetStackPolicy",
@@ -1488,7 +1737,11 @@
        ]
       },
       {
-       "Action": "*",
+       "Action": [
+        "*",
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
        "Effect": "Allow",
        "Resource": "*"
       }
@@ -1622,6 +1875,22 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1646,7 +1915,12 @@
     "Cache": {
      "Type": "NO_CACHE"
     },
-    "EncryptionKey": "alias/aws/s3",
+    "EncryptionKey": {
+     "Fn::GetAtt": [
+      "PipelineArtifactsBucketEncryptionKey01D58D69",
+      "Arn"
+     ]
+    },
     "Environment": {
      "ComputeType": "BUILD_GENERAL1_SMALL",
      "Image": "aws/codebuild/standard:6.0",
@@ -1785,6 +2059,22 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1809,7 +2099,12 @@
     "Cache": {
      "Type": "NO_CACHE"
     },
-    "EncryptionKey": "alias/aws/s3",
+    "EncryptionKey": {
+     "Fn::GetAtt": [
+      "PipelineArtifactsBucketEncryptionKey01D58D69",
+      "Arn"
+     ]
+    },
     "Environment": {
      "ComputeType": "BUILD_GENERAL1_SMALL",
      "Image": "aws/codebuild/standard:6.0",
@@ -1941,6 +2236,22 @@
          ]
         }
        ]
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:ReEncrypt*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1965,7 +2276,12 @@
     "Cache": {
      "Type": "NO_CACHE"
     },
-    "EncryptionKey": "alias/aws/s3",
+    "EncryptionKey": {
+     "Fn::GetAtt": [
+      "PipelineArtifactsBucketEncryptionKey01D58D69",
+      "Arn"
+     ]
+    },
     "Environment": {
      "ComputeType": "BUILD_GENERAL1_SMALL",
      "Image": "aws/codebuild/standard:6.0",
@@ -1991,7 +2307,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WO0W6DMAxFv6XvwYNO7QesP4DopD1OEDzVkMYIJ62qKP9eQbLRPd1zrWtf76E6VFDu2rsUuh8LQx2Es2v1qNq7fAexAuGTJ9Lq9GMTnH0neqbJEdtl+s+vkZoN6cffRrJRae5xogkNWYRQZ1pir/yF3YV5jEreIXx4PaJbxpmSbAWvPipqrxAaNuuhVbfkbwZvaJ1AaHyOeYPpt86T6bfH6pkH1Gt5xhhVg8J+1mkzc1SWe4RB3m77EqojlLtBiIrZW0dXhCbpE+YzRhFsAQAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WOQU/DMAyFf8vuqWmH4A4cuVQd0o6oTY1wkyZVnWyaovx31CTQcXrfs57td4TmqYH60F+5kqOqNA0QTq6XSvRX/gxsGMKHXUiKty+T4eQHlistjqzZpv98irRWk7z9bWQbhbQjLrSgJoMQ2kJb7J7POHxbq6JQM0N4x3RnkxdNPW8mQRT8COHVS4VuGxbKshe491FQP0PorE6Pku7J3wxe0DiG0PkS8xpz98GTHvfi7WonlOl5wRhFh2z9KvNm4SiMHREmfrgca2ieoT5MTFSt3jiaEbqsP4hKBNOMAQAA"
    },
    "Metadata": {
     "aws:cdk:path": "PipelineStack/CDKMetadata/Default"

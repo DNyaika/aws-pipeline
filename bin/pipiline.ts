@@ -9,6 +9,8 @@ import { Environment } from 'aws-cdk-lib';
 const usEast1Env: Environment = { account: '975550358131', region: 'us-east-1' };
 const euWest1Env: Environment = { account: '975550358131', region: 'eu-west-1' };
 
+const account2Env: Environment = { account: '503561423934', region: 'us-east-1' };
+
 const app = new cdk.App();
 const pipelineStack=new PipelineStack(app, "PipelineStack", {
     env: usEast1Env
@@ -24,6 +26,11 @@ const serviceStackTest = new ServiceStack(app, "ServiceStackTest",{
     stageName: 'Test',
 });
 
+const serviceStackTest2 = new ServiceStack(app, "ServiceStackTest2",{
+    env: account2Env,
+    stageName: 'Test',
+});
+
 const serviceStackProd = new ServiceStack(app, "ServiceStackProd",{
     env: usEast1Env,
     stageName: 'Prod',
@@ -35,6 +42,7 @@ const serviceStackProdBakup = new ServiceStack(app, "ServiceStackProdBackup",{
 } );
 
 const stageTest = pipelineStack.addServiceStage(serviceStackTest, 'Test');
+pipelineStack.addServiceStage(serviceStackTest2, 'CrossAccountTest');
 const prodStage=pipelineStack.addServiceStage(serviceStackProd, 'Prod');
 pipelineStack.addServiceStage(serviceStackProdBakup, 'ProdBackup');
 pipelineStack.addServiceIntegrationTestToStage(stageTest, serviceStackTest.serviceEndpointOutput.importValue);

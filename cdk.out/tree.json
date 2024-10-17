@@ -108,6 +108,86 @@
             "id": "Pipeline",
             "path": "PipelineStack/Pipeline",
             "children": {
+              "ArtifactsBucketEncryptionKey": {
+                "id": "ArtifactsBucketEncryptionKey",
+                "path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKey",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKey/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Key",
+                      "aws:cdk:cloudformation:props": {
+                        "keyPolicy": {
+                          "Statement": [
+                            {
+                              "Action": "kms:*",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::975550358131:root"
+                              },
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "kms:Decrypt",
+                                "kms:DescribeKey"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": [
+                                  "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+                                  "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+                                ]
+                              },
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnKey",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Key",
+                  "version": "2.151.0"
+                }
+              },
+              "ArtifactsBucketEncryptionKeyAlias": {
+                "id": "ArtifactsBucketEncryptionKeyAlias",
+                "path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKeyAlias",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "PipelineStack/Pipeline/ArtifactsBucketEncryptionKeyAlias/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Alias",
+                      "aws:cdk:cloudformation:props": {
+                        "aliasName": "alias/codepipeline-pipelinestack-pipeline-9db740af",
+                        "targetKeyId": {
+                          "Fn::GetAtt": [
+                            "PipelineArtifactsBucketEncryptionKey01D58D69",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnAlias",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Alias",
+                  "version": "2.151.0"
+                }
+              },
               "ArtifactsBucket": {
                 "id": "ArtifactsBucket",
                 "path": "PipelineStack/Pipeline/ArtifactsBucket",
@@ -122,11 +202,18 @@
                           "serverSideEncryptionConfiguration": [
                             {
                               "serverSideEncryptionByDefault": {
-                                "sseAlgorithm": "aws:kms"
+                                "sseAlgorithm": "aws:kms",
+                                "kmsMasterKeyId": {
+                                  "Fn::GetAtt": [
+                                    "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                    "Arn"
+                                  ]
+                                }
                               }
                             }
                           ]
                         },
+                        "bucketName": "pipelinestackeartifactsbucket5409dc84bcf0e6cfd351",
                         "publicAccessBlockConfiguration": {
                           "blockPublicAcls": true,
                           "blockPublicPolicy": true,
@@ -165,6 +252,42 @@
                                   "Effect": "Deny",
                                   "Principal": {
                                     "AWS": "*"
+                                  },
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PipelineArtifactsBucket22248F97",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucket22248F97",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "AWS": [
+                                      "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+                                      "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+                                    ]
                                   },
                                   "Resource": [
                                     {
@@ -300,9 +423,29 @@
                                   ]
                                 },
                                 {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    "*",
+                                    {
+                                      "Fn::GetAtt": [
+                                        "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
                                   "Action": "sts:AssumeRole",
                                   "Effect": "Allow",
                                   "Resource": [
+                                    "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
                                     {
                                       "Fn::GetAtt": [
                                         "PipelineBuildCDKBuildCodePipelineActionRole15F4B424",
@@ -386,7 +529,11 @@
                         "region": "eu-west-1",
                         "artifactStore": {
                           "type": "S3",
-                          "location": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511"
+                          "location": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
+                          "encryptionKey": {
+                            "type": "KMS",
+                            "id": "arn:aws:kms:eu-west-1:975550358131:alias/port-eu-tencryptionalias25ca5bc7d7d4ec6278fd"
+                          }
                         }
                       },
                       {
@@ -395,6 +542,15 @@
                           "type": "S3",
                           "location": {
                             "Ref": "PipelineArtifactsBucket22248F97"
+                          },
+                          "encryptionKey": {
+                            "type": "KMS",
+                            "id": {
+                              "Fn::GetAtt": [
+                                "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                "Arn"
+                              ]
+                            }
                           }
                         }
                       }
@@ -641,6 +797,39 @@
                                 "Arn"
                               ]
                             }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "CrossAccountTest",
+                        "actions": [
+                          {
+                            "name": "Service_Update",
+                            "inputArtifacts": [
+                              {
+                                "name": "ServiceBuildOutput"
+                              },
+                              {
+                                "name": "CDKBuildOutput"
+                              }
+                            ],
+                            "actionTypeId": {
+                              "category": "Deploy",
+                              "version": "1",
+                              "owner": "AWS",
+                              "provider": "CloudFormation"
+                            },
+                            "configuration": {
+                              "StackName": "ServiceStackTest2",
+                              "Capabilities": "CAPABILITY_NAMED_IAM",
+                              "RoleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+                              "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
+                              "ActionMode": "CREATE_UPDATE",
+                              "TemplatePath": "CDKBuildOutput::ServiceStackTest2.template.json"
+                            },
+                            "runOrder": 1,
+                            "roleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
+                            "region": "us-east-1"
                           }
                         ]
                       },
@@ -1145,6 +1334,19 @@
                                         },
                                         {
                                           "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "Action": [
                                             "cloudformation:CreateStack",
                                             "cloudformation:DescribeStack*",
                                             "cloudformation:GetStackPolicy",
@@ -1262,6 +1464,19 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
                                         },
                                         {
                                           "Action": "*",
@@ -1415,6 +1630,19 @@
                                         },
                                         {
                                           "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "Action": [
                                             "cloudformation:CreateStack",
                                             "cloudformation:DescribeStack*",
                                             "cloudformation:GetStackPolicy",
@@ -1532,6 +1760,19 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
                                         },
                                         {
                                           "Action": "*",
@@ -1751,6 +1992,24 @@
                   "version": "10.3.0"
                 }
               },
+              "CrossAccountTest": {
+                "id": "CrossAccountTest",
+                "path": "PipelineStack/Pipeline/CrossAccountTest",
+                "children": {
+                  "Service_Update": {
+                    "id": "Service_Update",
+                    "path": "PipelineStack/Pipeline/CrossAccountTest/Service_Update",
+                    "constructInfo": {
+                      "fqn": "constructs.Construct",
+                      "version": "10.3.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
               "Prod": {
                 "id": "Prod",
                 "path": "PipelineStack/Pipeline/Prod",
@@ -1855,6 +2114,19 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
                                         },
                                         {
                                           "Action": [
@@ -1975,6 +2247,19 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": {
+                                            "Fn::GetAtt": [
+                                              "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                              "Arn"
+                                            ]
+                                          }
                                         },
                                         {
                                           "Action": "*",
@@ -2110,6 +2395,14 @@
                                         },
                                         {
                                           "Action": [
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
+                                          "Effect": "Allow",
+                                          "Resource": "*"
+                                        },
+                                        {
+                                          "Action": [
                                             "cloudformation:CreateStack",
                                             "cloudformation:DescribeStack*",
                                             "cloudformation:GetStackPolicy",
@@ -2211,7 +2504,11 @@
                                           ]
                                         },
                                         {
-                                          "Action": "*",
+                                          "Action": [
+                                            "*",
+                                            "kms:Decrypt",
+                                            "kms:DescribeKey"
+                                          ],
                                           "Effect": "Allow",
                                           "Resource": "*"
                                         }
@@ -2405,6 +2702,22 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                      "Arn"
+                                    ]
+                                  }
                                 }
                               ],
                               "Version": "2012-10-17"
@@ -2446,7 +2759,12 @@
                     "cache": {
                       "type": "NO_CACHE"
                     },
-                    "encryptionKey": "alias/aws/s3",
+                    "encryptionKey": {
+                      "Fn::GetAtt": [
+                        "PipelineArtifactsBucketEncryptionKey01D58D69",
+                        "Arn"
+                      ]
+                    },
                     "environment": {
                       "type": "LINUX_CONTAINER",
                       "image": "aws/codebuild/standard:6.0",
@@ -2621,6 +2939,22 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                      "Arn"
+                                    ]
+                                  }
                                 }
                               ],
                               "Version": "2012-10-17"
@@ -2662,7 +2996,12 @@
                     "cache": {
                       "type": "NO_CACHE"
                     },
-                    "encryptionKey": "alias/aws/s3",
+                    "encryptionKey": {
+                      "Fn::GetAtt": [
+                        "PipelineArtifactsBucketEncryptionKey01D58D69",
+                        "Arn"
+                      ]
+                    },
                     "environment": {
                       "type": "LINUX_CONTAINER",
                       "image": "aws/codebuild/standard:6.0",
@@ -2830,6 +3169,22 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "Action": [
+                                    "kms:Decrypt",
+                                    "kms:DescribeKey",
+                                    "kms:Encrypt",
+                                    "kms:GenerateDataKey*",
+                                    "kms:ReEncrypt*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::GetAtt": [
+                                      "PipelineArtifactsBucketEncryptionKey01D58D69",
+                                      "Arn"
+                                    ]
+                                  }
                                 }
                               ],
                               "Version": "2012-10-17"
@@ -2871,7 +3226,12 @@
                     "cache": {
                       "type": "NO_CACHE"
                     },
-                    "encryptionKey": "alias/aws/s3",
+                    "encryptionKey": {
+                      "Fn::GetAtt": [
+                        "PipelineArtifactsBucketEncryptionKey01D58D69",
+                        "Arn"
+                      ]
+                    },
                     "environment": {
                       "type": "LINUX_CONTAINER",
                       "image": "aws/codebuild/standard:6.0",
@@ -3171,7 +3531,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-14T17:17:39.459Z",
+                    "description": "Generated on 2024-10-17T03:47:48.173Z",
                     "functionName": "ServiceLambdaTest",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3235,7 +3595,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B275510df04a09e22f721632640af37a29",
+                        "ServiceLambdaCurrentVersionA30C27B2a78f24cf15671bb2c75303d3386b904c",
                         "Version"
                       ]
                     },
@@ -3462,6 +3822,435 @@
           "version": "2.151.0"
         }
       },
+      "ServiceStackTest2": {
+        "id": "ServiceStackTest2",
+        "path": "ServiceStackTest2",
+        "children": {
+          "ServiceLambda": {
+            "id": "ServiceLambda",
+            "path": "ServiceStackTest2/ServiceLambda",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "ServiceStackTest2/ServiceLambda/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "ServiceStackTest2/ServiceLambda/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackTest2/ServiceLambda/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "ServiceStackTest2/ServiceLambda/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackTest2/ServiceLambda/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "ServiceLambdaServiceRoleDefaultPolicy99B6DE7C",
+                            "roles": [
+                              {
+                                "Ref": "ServiceLambdaServiceRoleF5A50FBC"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.151.0"
+                }
+              },
+              "LambdaSourceBucketNameParameter": {
+                "id": "LambdaSourceBucketNameParameter",
+                "path": "ServiceStackTest2/ServiceLambda/LambdaSourceBucketNameParameter",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.151.0"
+                }
+              },
+              "LambdaSourceObjectKeyParameter": {
+                "id": "LambdaSourceObjectKeyParameter",
+                "path": "ServiceStackTest2/ServiceLambda/LambdaSourceObjectKeyParameter",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackTest2/ServiceLambda/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "ServiceLambdaLambdaSourceBucketNameParameterA6290FE3"
+                      },
+                      "s3Key": {
+                        "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
+                      }
+                    },
+                    "description": "Generated on 2024-10-17T03:47:48.191Z",
+                    "functionName": "ServiceLambdaTest",
+                    "handler": "src/lambda.handler",
+                    "role": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaServiceRoleF5A50FBC",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "nodejs18.x"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.151.0"
+                }
+              },
+              "CurrentVersion": {
+                "id": "CurrentVersion",
+                "path": "ServiceStackTest2/ServiceLambda/CurrentVersion",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackTest2/ServiceLambda/CurrentVersion/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Version",
+                      "aws:cdk:cloudformation:props": {
+                        "functionName": {
+                          "Ref": "ServiceLambdaA7DE4D2C"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnVersion",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.Version",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceLambdaAlias": {
+            "id": "ServiceLambdaAlias",
+            "path": "ServiceStackTest2/ServiceLambdaAlias",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackTest2/ServiceLambdaAlias/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Alias",
+                  "aws:cdk:cloudformation:props": {
+                    "functionName": {
+                      "Ref": "ServiceLambdaA7DE4D2C"
+                    },
+                    "functionVersion": {
+                      "Fn::GetAtt": [
+                        "ServiceLambdaCurrentVersionA30C27B25c39e57a4e35fc8063e90466e87ebac7",
+                        "Version"
+                      ]
+                    },
+                    "name": "ServiceLambdaAliasTest"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnAlias",
+                  "version": "2.151.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "ServiceStackTest2/ServiceLambdaAlias/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Alias",
+              "version": "2.151.0"
+            }
+          },
+          "ServiceApi": {
+            "id": "ServiceApi",
+            "path": "ServiceStackTest2/ServiceApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "ServiceStackTest2/ServiceApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Api",
+                  "aws:cdk:cloudformation:props": {
+                    "name": "ServiceApiTest",
+                    "protocolType": "HTTP"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnApi",
+                  "version": "2.151.0"
+                }
+              },
+              "DefaultRoute": {
+                "id": "DefaultRoute",
+                "path": "ServiceStackTest2/ServiceApi/DefaultRoute",
+                "children": {
+                  "ServiceLambdaIntegration": {
+                    "id": "ServiceLambdaIntegration",
+                    "path": "ServiceStackTest2/ServiceApi/DefaultRoute/ServiceLambdaIntegration",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "ServiceStackTest2/ServiceApi/DefaultRoute/ServiceLambdaIntegration/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Integration",
+                          "aws:cdk:cloudformation:props": {
+                            "apiId": {
+                              "Ref": "ServiceApi4633ACD6"
+                            },
+                            "integrationType": "AWS_PROXY",
+                            "integrationUri": {
+                              "Ref": "ServiceLambdaAlias89D0CD0D"
+                            },
+                            "payloadFormatVersion": "2.0"
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnIntegration",
+                          "version": "2.151.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpIntegration",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "ServiceLambdaIntegration-Permission": {
+                    "id": "ServiceLambdaIntegration-Permission",
+                    "path": "ServiceStackTest2/ServiceApi/DefaultRoute/ServiceLambdaIntegration-Permission",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                      "aws:cdk:cloudformation:props": {
+                        "action": "lambda:InvokeFunction",
+                        "functionName": {
+                          "Ref": "ServiceLambdaAlias89D0CD0D"
+                        },
+                        "principal": "apigateway.amazonaws.com",
+                        "sourceArn": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "arn:aws:execute-api:us-east-1:503561423934:",
+                              {
+                                "Ref": "ServiceApi4633ACD6"
+                              },
+                              "/*/*"
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnPermission",
+                      "version": "2.151.0"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackTest2/ServiceApi/DefaultRoute/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Route",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "ServiceApi4633ACD6"
+                        },
+                        "authorizationType": "NONE",
+                        "routeKey": "$default",
+                        "target": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "integrations/",
+                              {
+                                "Ref": "ServiceApiDefaultRouteServiceLambdaIntegration9CFAFDC9"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnRoute",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpRoute",
+                  "version": "2.151.0"
+                }
+              },
+              "DefaultStage": {
+                "id": "DefaultStage",
+                "path": "ServiceStackTest2/ServiceApi/DefaultStage",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "ServiceStackTest2/ServiceApi/DefaultStage/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGatewayV2::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Ref": "ServiceApi4633ACD6"
+                        },
+                        "autoDeploy": true,
+                        "stageName": "$default"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigatewayv2.CfnStage",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpStage",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigatewayv2.HttpApi",
+              "version": "2.151.0"
+            }
+          },
+          "ApiEndpointOutput": {
+            "id": "ApiEndpointOutput",
+            "path": "ServiceStackTest2/ApiEndpointOutput",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.151.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "ServiceStackTest2/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "ServiceStackTest2/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "ServiceStackTest2/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.151.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "ServiceStackTest2/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.151.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.151.0"
+        }
+      },
       "ServiceStackProd": {
         "id": "ServiceStackProd",
         "path": "ServiceStackProd",
@@ -3600,7 +4389,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-14T17:17:39.472Z",
+                    "description": "Generated on 2024-10-17T03:47:48.193Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -3664,7 +4453,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B29767200fb59fdb10b4ec3a0411d402d8",
+                        "ServiceLambdaCurrentVersionA30C27B2fbd3802f3200ab0665206eec9b9f243b",
                         "Version"
                       ]
                     },
@@ -4317,7 +5106,7 @@
                                 "ApiEndpoint"
                               ]
                             },
-                            "DEPLOYMENT_TRIGGER": "1728926259483"
+                            "DEPLOYMENT_TRIGGER": "1729136868211"
                           }
                         },
                         "runtimeVersion": "syn-nodejs-puppeteer-6.2",
@@ -4577,7 +5366,7 @@
                         "Ref": "ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA"
                       }
                     },
-                    "description": "Generated on 2024-10-14T17:17:39.486Z",
+                    "description": "Generated on 2024-10-17T03:47:48.216Z",
                     "functionName": "ServiceLambdaProd",
                     "handler": "src/lambda.handler",
                     "role": {
@@ -4641,7 +5430,7 @@
                     },
                     "functionVersion": {
                       "Fn::GetAtt": [
-                        "ServiceLambdaCurrentVersionA30C27B283430b77e984a5dfb260aa9c57b6bbf9",
+                        "ServiceLambdaCurrentVersionA30C27B25132e0df77f0c905977e160c5bc05d73",
                         "Version"
                       ]
                     },
@@ -5294,7 +6083,7 @@
                                 "ApiEndpoint"
                               ]
                             },
-                            "DEPLOYMENT_TRIGGER": "1728926259489"
+                            "DEPLOYMENT_TRIGGER": "1729136868219"
                           }
                         },
                         "runtimeVersion": "syn-nodejs-puppeteer-6.2",
@@ -5416,6 +6205,278 @@
           "version": "2.151.0"
         }
       },
+      "cross-account-support-stack-503561423934": {
+        "id": "cross-account-support-stack-503561423934",
+        "path": "cross-account-support-stack-503561423934",
+        "children": {
+          "PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole": {
+            "id": "PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole",
+            "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole",
+            "children": {
+              "ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole": {
+                "id": "ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "AWS": "arn:aws:iam::975550358131:root"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "roleName": "pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.151.0"
+                }
+              },
+              "8389e75f-0810-4838-bf64-d6f85a95cf83": {
+                "id": "8389e75f-0810-4838-bf64-d6f85a95cf83",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/8389e75f-0810-4838-bf64-d6f85a95cf83",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-ActionRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "iam:PassRole",
+                              "Effect": "Allow",
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateDeploymentRole0FA4044D",
+                                  "Arn"
+                                ]
+                              }
+                            },
+                            {
+                              "Action": [
+                                "s3:GetBucket*",
+                                "s3:GetObject*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:s3:::pipelinestackeartifactsbucket5409dc84bcf0e6cfd351",
+                                "arn:aws:s3:::pipelinestackeartifactsbucket5409dc84bcf0e6cfd351/*"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "kms:Decrypt",
+                                "kms:DescribeKey"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "cloudformation:CreateStack",
+                                "cloudformation:DescribeStack*",
+                                "cloudformation:GetStackPolicy",
+                                "cloudformation:GetTemplate*",
+                                "cloudformation:SetStackPolicy",
+                                "cloudformation:UpdateStack",
+                                "cloudformation:ValidateTemplate"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "arn:aws:cloudformation:us-east-1:503561423934:stack/ServiceStackTest2/*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateActionRoleDefaultPolicy2E557150",
+                        "roles": [
+                          {
+                            "Ref": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateActionRoleD8C8CD88"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.151.0"
+            }
+          },
+          "PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole": {
+            "id": "PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole",
+            "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole",
+            "children": {
+              "ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole": {
+                "id": "ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/ImportPipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.151.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "cloudformation.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "roleName": "pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.151.0"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "cross-account-support-stack-503561423934/PipelineStackPipeline9DB740AF-CrossAccountTest-Service_Update-DeploymentRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "s3:GetBucket*",
+                                "s3:GetObject*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                "arn:aws:s3:::pipelinestackeartifactsbucket5409dc84bcf0e6cfd351",
+                                "arn:aws:s3:::pipelinestackeartifactsbucket5409dc84bcf0e6cfd351/*"
+                              ]
+                            },
+                            {
+                              "Action": [
+                                "*",
+                                "kms:Decrypt",
+                                "kms:DescribeKey"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateDeploymentRoleDefaultPolicy81014B64",
+                        "roles": [
+                          {
+                            "Ref": "PipelineStackPipeline9DB740AFCrossAccountTestServiceUpdateDeploymentRole0FA4044D"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.151.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "cross-account-support-stack-503561423934/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "cross-account-support-stack-503561423934/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.151.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.3.0"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "cross-account-support-stack-503561423934/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.151.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "cross-account-support-stack-503561423934/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.151.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.151.0"
+        }
+      },
       "cross-region-stack-975550358131:eu-west-1": {
         "id": "cross-region-stack-975550358131:eu-west-1",
         "path": "cross-region-stack-975550358131:eu-west-1",
@@ -5424,6 +6485,97 @@
             "id": "Default",
             "path": "cross-region-stack-975550358131:eu-west-1/Default",
             "children": {
+              "CrossRegionCodePipelineReplicationBucketEncryptionKey": {
+                "id": "CrossRegionCodePipelineReplicationBucketEncryptionKey",
+                "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionKey",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionKey/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Key",
+                      "aws:cdk:cloudformation:props": {
+                        "keyPolicy": {
+                          "Statement": [
+                            {
+                              "Action": "kms:*",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::975550358131:root"
+                              },
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "kms:Decrypt",
+                                "kms:DescribeKey",
+                                "kms:Encrypt",
+                                "kms:GenerateDataKey*",
+                                "kms:ReEncrypt*"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::975550358131:root"
+                              },
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "kms:Decrypt",
+                                "kms:DescribeKey"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::975550358131:root"
+                              },
+                              "Resource": "*"
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnKey",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Key",
+                  "version": "2.151.0"
+                }
+              },
+              "CrossRegionCodePipelineReplicationBucketEncryptionAlias": {
+                "id": "CrossRegionCodePipelineReplicationBucketEncryptionAlias",
+                "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionAlias",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucketEncryptionAlias/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::KMS::Alias",
+                      "aws:cdk:cloudformation:props": {
+                        "aliasName": "alias/port-eu-tencryptionalias25ca5bc7d7d4ec6278fd",
+                        "targetKeyId": {
+                          "Fn::GetAtt": [
+                            "CrossRegionCodePipelineReplicationBucketEncryptionKey70216490",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_kms.CfnAlias",
+                      "version": "2.151.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_kms.Alias",
+                  "version": "2.151.0"
+                }
+              },
               "CrossRegionCodePipelineReplicationBucket": {
                 "id": "CrossRegionCodePipelineReplicationBucket",
                 "path": "cross-region-stack-975550358131:eu-west-1/Default/CrossRegionCodePipelineReplicationBucket",
@@ -5438,7 +6590,18 @@
                           "serverSideEncryptionConfiguration": [
                             {
                               "serverSideEncryptionByDefault": {
-                                "sseAlgorithm": "aws:kms"
+                                "sseAlgorithm": "aws:kms",
+                                "kmsMasterKeyId": {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      "arn:aws:kms:eu-west-1:975550358131:",
+                                      {
+                                        "Ref": "CrossRegionCodePipelineReplicationBucketEncryptionAliasF1A0F37D"
+                                      }
+                                    ]
+                                  ]
+                                }
                               }
                             }
                           ]
