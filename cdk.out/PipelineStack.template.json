@@ -60,7 +60,18 @@
        "Action": "kms:*",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        },
        "Resource": "*"
       },
@@ -71,10 +82,40 @@
        ],
        "Effect": "Allow",
        "Principal": {
-        "AWS": [
-         "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
-         "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
-        ]
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2"
+          ]
+         ]
+        }
+       },
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+          ]
+         ]
+        }
        },
        "Resource": "*"
       }
@@ -91,7 +132,7 @@
   "PipelineArtifactsBucketEncryptionKeyAlias5C510EEE": {
    "Type": "AWS::KMS::Alias",
    "Properties": {
-    "AliasName": "alias/codepipeline-pipelinestack-pipeline-9db740af",
+    "AliasName": "alias/codepipeline-pipelinestackpipeline9db740af",
     "TargetKeyId": {
      "Fn::GetAtt": [
       "PipelineArtifactsBucketEncryptionKey01D58D69",
@@ -181,16 +222,68 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
        "Principal": {
-        "AWS": [
-         "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
-         "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
-        ]
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2"
+          ]
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "PipelineArtifactsBucket22248F97",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "PipelineArtifactsBucket22248F97",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+          ]
+         ]
+        }
        },
        "Resource": [
         {
@@ -250,21 +343,19 @@
      "Statement": [
       {
        "Action": [
-        "s3:Abort*",
-        "s3:DeleteObject*",
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*",
+        "s3:DeleteObject*",
         "s3:PutObject",
         "s3:PutObjectLegalHold",
         "s3:PutObjectRetention",
         "s3:PutObjectTagging",
-        "s3:PutObjectVersionTagging"
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
        ],
        "Effect": "Allow",
        "Resource": [
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*",
         {
          "Fn::GetAtt": [
           "PipelineArtifactsBucket22248F97",
@@ -292,68 +383,154 @@
         "kms:Decrypt",
         "kms:DescribeKey",
         "kms:Encrypt",
-        "kms:GenerateDataKey*",
-        "kms:ReEncrypt*"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineBuildCDKBuildCodePipelineActionRole15F4B424",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelinePipelineUpdateCodePipelineActionRoleF10AA166",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
        ],
        "Effect": "Allow",
        "Resource": [
-        "*",
         {
-         "Fn::GetAtt": [
-          "PipelineArtifactsBucketEncryptionKey01D58D69",
-          "Arn"
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+          ]
          ]
         }
        ]
       },
       {
+       "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
-       "Resource": [
-        "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
-        {
-         "Fn::GetAtt": [
-          "PipelineBuildCDKBuildCodePipelineActionRole15F4B424",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelineBuildServiceBuildCodePipelineActionRole584B0FA3",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelinePipelineUpdateCodePipelineActionRoleF10AA166",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelineProdBackupServiceUpdateCodePipelineActionRoleED07BC65",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelineProdServiceUpdateCodePipelineActionRole7B1E1378",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelineTestIntegrationTestCodePipelineActionRole4E1072DE",
-          "Arn"
-         ]
-        },
-        {
-         "Fn::GetAtt": [
-          "PipelineTestServiceUpdateCodePipelineActionRole78C5EECE",
-          "Arn"
-         ]
-        }
-       ]
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineProdBackupServiceUpdateCodePipelineActionRoleED07BC65",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineTestIntegrationTestCodePipelineActionRole4E1072DE",
+         "Arn"
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -376,7 +553,18 @@
      {
       "ArtifactStore": {
        "EncryptionKey": {
-        "Id": "arn:aws:kms:eu-west-1:975550358131:alias/port-eu-tencryptionalias25ca5bc7d7d4ec6278fd",
+        "Id": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":kms:eu-west-1:975550358131:alias/port-eu-tencryptionalias25ca5bc7d7d4ec6278fd"
+          ]
+         ]
+        },
         "Type": "KMS"
        },
        "Location": "pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
@@ -404,7 +592,6 @@
      }
     ],
     "Name": "Pipeline",
-    "PipelineType": "V2",
     "RestartExecutionOnUpdate": true,
     "RoleArn": {
      "Fn::GetAtt": [
@@ -660,7 +847,18 @@
         "Configuration": {
          "StackName": "ServiceStackTest2",
          "Capabilities": "CAPABILITY_NAMED_IAM",
-         "RoleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2",
+         "RoleArn": {
+          "Fn::Join": [
+           "",
+           [
+            "arn:",
+            {
+             "Ref": "AWS::Partition"
+            },
+            ":iam::503561423934:role/pipelinestack-support-503tedeploymentrole7d95ca19463326d697e2"
+           ]
+          ]
+         },
          "ParameterOverrides": "{\"ServiceLambdaLambdaSourceBucketNameParameterA6290FE3\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"BucketName\"]},\"ServiceLambdaLambdaSourceObjectKeyParameter86BEE2BA\":{\"Fn::GetArtifactAtt\":[\"ServiceBuildOutput\",\"ObjectKey\"]}}",
          "ActionMode": "CREATE_UPDATE",
          "TemplatePath": "CDKBuildOutput::ServiceStackTest2.template.json"
@@ -675,7 +873,18 @@
         ],
         "Name": "Service_Update",
         "Region": "us-east-1",
-        "RoleArn": "arn:aws:iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7",
+        "RoleArn": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::503561423934:role/pipelinestack-support-503updateactionrolec812977b181b3d6196b7"
+          ]
+         ]
+        },
         "RunOrder": 1
        }
       ],
@@ -834,7 +1043,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -887,7 +1107,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -940,7 +1171,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -968,8 +1210,8 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1020,7 +1262,18 @@
         "cloudformation:ValidateTemplate"
        ],
        "Effect": "Allow",
-       "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/PipelineStack/*"
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:us-east-1:975550358131:stack/PipelineStack/*"
+         ]
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1063,8 +1316,8 @@
      "Statement": [
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1132,7 +1385,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -1160,8 +1424,8 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1212,7 +1476,18 @@
         "cloudformation:ValidateTemplate"
        ],
        "Effect": "Allow",
-       "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/ServiceStackTest/*"
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:us-east-1:975550358131:stack/ServiceStackTest/*"
+         ]
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1255,8 +1530,8 @@
      "Statement": [
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1324,7 +1599,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -1395,7 +1681,11 @@
        "Fn::Join": [
         "",
         [
-         "arn:aws:codepipeline:us-east-1:975550358131:",
+         "arn:",
+         {
+          "Ref": "AWS::Partition"
+         },
+         ":codepipeline:us-east-1:975550358131:",
          {
           "Ref": "PipelineC660917D"
          }
@@ -1434,7 +1724,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -1462,8 +1763,8 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1514,7 +1815,18 @@
         "cloudformation:ValidateTemplate"
        ],
        "Effect": "Allow",
-       "Resource": "arn:aws:cloudformation:us-east-1:975550358131:stack/ServiceStackProd/*"
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:us-east-1:975550358131:stack/ServiceStackProd/*"
+         ]
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1557,8 +1869,8 @@
      "Statement": [
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -1626,7 +1938,18 @@
        "Action": "sts:AssumeRole",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::975550358131:root"
+        "AWS": {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":iam::975550358131:root"
+          ]
+         ]
+        }
        }
       }
      ],
@@ -1654,14 +1977,36 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
        "Resource": [
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+          ]
+         ]
+        }
        ]
       },
       {
@@ -1683,7 +2028,18 @@
         "cloudformation:ValidateTemplate"
        ],
        "Effect": "Allow",
-       "Resource": "arn:aws:cloudformation:eu-west-1:975550358131:stack/ServiceStackProdBackup/*"
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":cloudformation:eu-west-1:975550358131:stack/ServiceStackProdBackup/*"
+         ]
+        ]
+       }
       }
      ],
      "Version": "2012-10-17"
@@ -1726,22 +2082,48 @@
      "Statement": [
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
        "Resource": [
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511",
-        "arn:aws:s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":s3:::pipelinestack-support-eu-eplicationbucketc56eb33dbe5ceb8e6511/*"
+          ]
+         ]
+        }
        ]
       },
       {
        "Action": [
-        "*",
         "kms:Decrypt",
         "kms:DescribeKey"
        ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "*",
        "Effect": "Allow",
        "Resource": "*"
       }
@@ -1796,11 +2178,14 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "CDKBuildProject96462ED9"
-           },
-           ":*"
+           }
           ]
          ]
         },
@@ -1808,10 +2193,15 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "CDKBuildProject96462ED9"
-           }
+           },
+           ":*"
           ]
          ]
         }
@@ -1819,18 +2209,22 @@
       },
       {
        "Action": [
-        "codebuild:BatchPutCodeCoverages",
-        "codebuild:BatchPutTestCases",
-        "codebuild:CreateReport",
         "codebuild:CreateReportGroup",
-        "codebuild:UpdateReport"
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
        ],
        "Effect": "Allow",
        "Resource": {
         "Fn::Join": [
          "",
          [
-          "arn:aws:codebuild:us-east-1:975550358131:report-group/",
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:us-east-1:975550358131:report-group/",
           {
            "Ref": "CDKBuildProject96462ED9"
           },
@@ -1841,16 +2235,16 @@
       },
       {
        "Action": [
-        "s3:Abort*",
-        "s3:DeleteObject*",
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*",
+        "s3:DeleteObject*",
         "s3:PutObject",
         "s3:PutObjectLegalHold",
         "s3:PutObjectRetention",
         "s3:PutObjectTagging",
-        "s3:PutObjectVersionTagging"
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
        ],
        "Effect": "Allow",
        "Resource": [
@@ -1881,8 +2275,23 @@
         "kms:Decrypt",
         "kms:DescribeKey",
         "kms:Encrypt",
-        "kms:GenerateDataKey*",
-        "kms:ReEncrypt*"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
        ],
        "Effect": "Allow",
        "Resource": {
@@ -1980,11 +2389,14 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "ServiceBuildProject6D228AFA"
-           },
-           ":*"
+           }
           ]
          ]
         },
@@ -1992,10 +2404,15 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "ServiceBuildProject6D228AFA"
-           }
+           },
+           ":*"
           ]
          ]
         }
@@ -2003,18 +2420,22 @@
       },
       {
        "Action": [
-        "codebuild:BatchPutCodeCoverages",
-        "codebuild:BatchPutTestCases",
-        "codebuild:CreateReport",
         "codebuild:CreateReportGroup",
-        "codebuild:UpdateReport"
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
        ],
        "Effect": "Allow",
        "Resource": {
         "Fn::Join": [
          "",
          [
-          "arn:aws:codebuild:us-east-1:975550358131:report-group/",
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:us-east-1:975550358131:report-group/",
           {
            "Ref": "ServiceBuildProject6D228AFA"
           },
@@ -2025,16 +2446,16 @@
       },
       {
        "Action": [
-        "s3:Abort*",
-        "s3:DeleteObject*",
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*",
+        "s3:DeleteObject*",
         "s3:PutObject",
         "s3:PutObjectLegalHold",
         "s3:PutObjectRetention",
         "s3:PutObjectTagging",
-        "s3:PutObjectVersionTagging"
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
        ],
        "Effect": "Allow",
        "Resource": [
@@ -2065,8 +2486,23 @@
         "kms:Decrypt",
         "kms:DescribeKey",
         "kms:Encrypt",
-        "kms:GenerateDataKey*",
-        "kms:ReEncrypt*"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
        ],
        "Effect": "Allow",
        "Resource": {
@@ -2164,11 +2600,14 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "ServiceIntegrationTestsProject3F2F4E22"
-           },
-           ":*"
+           }
           ]
          ]
         },
@@ -2176,10 +2615,15 @@
          "Fn::Join": [
           "",
           [
-           "arn:aws:logs:us-east-1:975550358131:log-group:/aws/codebuild/",
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:us-east-1:975550358131:log-group:/aws/codebuild/",
            {
             "Ref": "ServiceIntegrationTestsProject3F2F4E22"
-           }
+           },
+           ":*"
           ]
          ]
         }
@@ -2187,18 +2631,22 @@
       },
       {
        "Action": [
-        "codebuild:BatchPutCodeCoverages",
-        "codebuild:BatchPutTestCases",
-        "codebuild:CreateReport",
         "codebuild:CreateReportGroup",
-        "codebuild:UpdateReport"
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
        ],
        "Effect": "Allow",
        "Resource": {
         "Fn::Join": [
          "",
          [
-          "arn:aws:codebuild:us-east-1:975550358131:report-group/",
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:us-east-1:975550358131:report-group/",
           {
            "Ref": "ServiceIntegrationTestsProject3F2F4E22"
           },
@@ -2209,8 +2657,8 @@
       },
       {
        "Action": [
-        "s3:GetBucket*",
         "s3:GetObject*",
+        "s3:GetBucket*",
         "s3:List*"
        ],
        "Effect": "Allow",
@@ -2240,10 +2688,22 @@
       {
        "Action": [
         "kms:Decrypt",
-        "kms:DescribeKey",
+        "kms:DescribeKey"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "PipelineArtifactsBucketEncryptionKey01D58D69",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "kms:Decrypt",
         "kms:Encrypt",
-        "kms:GenerateDataKey*",
-        "kms:ReEncrypt*"
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*"
        ],
        "Effect": "Allow",
        "Resource": {

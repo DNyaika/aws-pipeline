@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/7d5dab2cb03bd781e4d301af76bffadf4bf751eed231481160a73e568679d234.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/3ca83c353c5799311494f9f1573718d42ca79637668f78727b45c35c7b8db942.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -52,6 +52,36 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "PipelineNotificationTopicPolicyDA8EB620"
+          }
+        ],
+        "/PipelineStack/Pipeline": [
+          {
+            "type": "aws:cdk:warning",
+            "data": "V1 pipeline type is implicitly selected when `pipelineType` is not set. If you want to use V2 type, set `PipelineType.V2`. [ack: @aws-cdk/aws-codepipeline:unspecifiedPipelineType]",
+            "trace": [
+              "Annotations.addMessage (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1608)",
+              "Annotations.addWarningV2 (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/aws-cdk-lib/core/lib/annotations.js:1:825)",
+              "new Pipeline (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/aws-cdk-lib/aws-codepipeline/lib/pipeline.js:1:6677)",
+              "new PipelineStack (/Users/davidnyaika/AWS_Projects/aws-pipeline/lib/pipeline-stack.ts:31:21)",
+              "Object.<anonymous> (/Users/davidnyaika/AWS_Projects/aws-pipeline/bin/pipiline.ts:15:21)",
+              "Module._compile (node:internal/modules/cjs/loader:1358:14)",
+              "Module.m._compile (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/index.ts:1618:23)",
+              "Module._extensions..js (node:internal/modules/cjs/loader:1416:10)",
+              "Object.require.extensions.<computed> [as .ts] (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/index.ts:1621:12)",
+              "Module.load (node:internal/modules/cjs/loader:1208:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1024:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)",
+              "phase4 (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/bin.ts:649:14)",
+              "bootstrap (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/bin.ts:95:10)",
+              "main (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/bin.ts:55:10)",
+              "Object.<anonymous> (/Users/davidnyaika/AWS_Projects/aws-pipeline/node_modules/ts-node/src/bin.ts:800:3)",
+              "Module._compile (node:internal/modules/cjs/loader:1358:14)",
+              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1416:10)",
+              "Module.load (node:internal/modules/cjs/loader:1208:32)",
+              "Function.Module._load (node:internal/modules/cjs/loader:1024:12)",
+              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:174:12)",
+              "node:internal/main/run_main_module:28:49"
+            ]
           }
         ],
         "/PipelineStack/Pipeline/ArtifactsBucketEncryptionKey/Resource": [
@@ -398,7 +428,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/1d21a0dc6a3ed8139dcbeb2496a63a03a07c954a5ee92f9426fceac6b4867bd4.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/70a3ee6436639b9dcea441e29ab9e89750a328273376c620669c8b67143b2341.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -447,7 +477,7 @@
         "/ServiceStackTest/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B2a78f24cf15671bb2c75303d3386b904c"
+            "data": "ServiceLambdaCurrentVersionA30C27B2a47c08e57010beb782821d50422e4a4f"
           }
         ],
         "/ServiceStackTest/ServiceLambdaAlias/Resource": [
@@ -530,7 +560,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-deploy-role-503561423934-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-cfn-exec-role-503561423934-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/7a0808de6e2d2a92e47a7ceb24fc87447a9e92ed3d97fd2ce74dc264983fd13c.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/51c768689acfbd1fdbfed4b5ecf0d832c4ff732285e56970956ce29338c76a0f.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -579,7 +609,7 @@
         "/ServiceStackTest2/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B25c39e57a4e35fc8063e90466e87ebac7"
+            "data": "ServiceLambdaCurrentVersionA30C27B2e4cedfc15824e28cf79d1448ebf2f58e"
           }
         ],
         "/ServiceStackTest2/ServiceLambdaAlias/Resource": [
@@ -662,7 +692,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/59b4370f96b2d9244e5fc4000451f7961ecb4adce563ddb5f4f1317f5ade5275.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-us-east-1/235e08260706ade92a9a4e4b3d1f79d01608215cea358699e4c23c96811ec705.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -711,7 +741,7 @@
         "/ServiceStackProd/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B2fbd3802f3200ab0665206eec9b9f243b"
+            "data": "ServiceLambdaCurrentVersionA30C27B2d3e6ed26d7d10f57e293f48d9f99c408"
           }
         ],
         "/ServiceStackProd/ServiceLambdaAlias/Resource": [
@@ -860,7 +890,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-deploy-role-975550358131-eu-west-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::975550358131:role/cdk-hnb659fds-cfn-exec-role-975550358131-eu-west-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-eu-west-1/eaa449262a3d11306c52159db390849f9eb6941fce368695e443daffa2ce6354.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-975550358131-eu-west-1/c684ede823602f9e2adde7d0d1b7820f269481a384ca40db4469f006b10dfce2.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -909,7 +939,7 @@
         "/ServiceStackProdBackup/ServiceLambda/CurrentVersion/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "ServiceLambdaCurrentVersionA30C27B25132e0df77f0c905977e160c5bc05d73"
+            "data": "ServiceLambdaCurrentVersionA30C27B276533dd97899c174919249f9c0e255e3"
           }
         ],
         "/ServiceStackProdBackup/ServiceLambdaAlias/Resource": [
@@ -1058,7 +1088,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-deploy-role-503561423934-us-east-1",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::503561423934:role/cdk-hnb659fds-cfn-exec-role-503561423934-us-east-1",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/9efc94ad2139de8424146b440295d92337851b8fbee62101c097e6aa616cd67b.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-503561423934-us-east-1/77d44556ac945a96f41ef761fff4ed6448b7e93f0a02e6ecb31a7873133ffae7.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
